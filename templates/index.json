@@ -5,9 +5,11 @@
       "settings": {
         "eyebrow": "Hormonal health for Black women",
         "heading": "The healthcare system wasn't built with you in mind.\n[accent]For Her Throne was.[/accent]",
-        "subheading": "Daily Reign is the hormonal balance formula built specifically for the disparities Black women face — backed by NIH and CDC data, not guesswork.",
-        "cta_primary": "Shop Daily Reign — $45.00",
+        "subheading": "We build supplement formulas specifically for the health disparities Black women face — using NIH and CDC data, not guesswork.",
+        "cta_primary": "Shop Our Formulas",
+        "cta_primary_url": "/collections/all",
         "cta_secondary": "Our story",
+        "cta_secondary_url": "/pages/about",
         "social_proof": "Formulated from the data. Built for you."
       }
     },
@@ -64,8 +66,8 @@
       "settings": {
         "eyebrow": "What's inside — and why",
         "heading": "Every ingredient chosen for a reason. Your reason.",
-        "intro": "Daily Reign isn't a generic women's multi. Each of the 8 ingredients was selected specifically because of documented disparities in Black women's hormonal health.",
-        "cta_label": "See full ingredient breakdown"
+        "intro": "Our formulas aren't adapted from generic supplements. Every ingredient is selected specifically because of documented disparities in Black women's hormonal health.",
+        "cta_label": "Shop our formulas"
       },
       "blocks": {
         "ing_1": { "type": "ingredient", "settings": { "icon": "🌿", "name": "Black Cohosh",        "dose": "160mg", "benefit": "Supports hormonal comfort and menopausal transition",  "relevance": "Black women experience perimenopause on average 8 years earlier — Black Cohosh addresses that earlier timeline directly." } },
