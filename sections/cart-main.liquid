@@ -199,7 +199,9 @@
     if (item) item.classList.add('is-loading');
 
     const body = { id: key, quantity };
-    if (sellingPlan !== undefined) body.selling_plan = sellingPlan;
+    // Only set selling_plan when it's a real ID — never send empty string
+    if (sellingPlan && sellingPlan !== '') body.selling_plan = sellingPlan;
+    if (sellingPlan === null) body.selling_plan = null;
 
     try {
       const res  = await fetch('/cart/change.js', {
@@ -207,20 +209,27 @@
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body:    JSON.stringify(body),
       });
-      const cart = await res.json();
+      const data = await res.json();
+
+      // Guard against error responses (no total_price)
+      if (!data || typeof data.total_price !== 'number') {
+        console.error('Cart API error:', data);
+        item?.classList.remove('is-loading');
+        return;
+      }
 
       if (quantity === 0) {
         removeItemFromDOM(key);
       } else {
-        const line = cart.items?.find(i => i.key === key);
+        const line = data.items?.find(i => i.key === key);
         if (line) updateLinePrice(key, line.line_price);
         item?.classList.remove('is-loading');
       }
 
-      updateTotals(cart.total_price);
+      updateTotals(data.total_price);
 
       const countEl = document.querySelector('.cart-count');
-      if (countEl) countEl.textContent = cart.item_count;
+      if (countEl) countEl.textContent = data.item_count;
 
     } catch (err) {
       console.error('Cart error:', err);
@@ -278,10 +287,10 @@
 
       if (nowOn) {
         select?.removeAttribute('hidden');
-        changeCart(key, getQty(key), select?.value || '');
+        changeCart(key, getQty(key), select?.value || null);
       } else {
         select?.setAttribute('hidden', '');
-        changeCart(key, getQty(key), '');
+        changeCart(key, getQty(key), null);
       }
     });
   });
