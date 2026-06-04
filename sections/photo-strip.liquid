@@ -1,7 +1,8 @@
 {%- comment -%}
   SECTION: photo-strip
-  3-photo community grid. Configurable via Theme Editor.
-  Default images pulled from assets — swap via image pickers.
+  Up to 5-photo community grid. Count controlled by section.settings.photo_count.
+  Configurable via Theme Editor — swap images via image pickers.
+  Default images pulled from assets (community-1.jpg through community-5.jpg).
 {%- endcomment -%}
 
 <section class="photo-strip section-pad">
@@ -20,33 +21,25 @@
       </header>
     {%- endif -%}
 
-    <div class="photo-strip__grid">
+    {%- assign count = section.settings.photo_count | default: 3 -%}
+    <div class="photo-strip__grid photo-strip__grid--{{ count }}">
 
-      {%- for i in (1..3) -%}
+      {%- for i in (1..count) -%}
         {%- assign img_setting = 'image_' | append: i -%}
         {%- assign alt_setting = 'alt_'   | append: i -%}
         {%- assign img = section.settings[img_setting] -%}
-        {%- assign alt = section.settings[alt_setting] -%}
+        {%- assign alt = section.settings[alt_setting] | default: 'A Black woman — present, confident, sovereign.' -%}
+        {%- assign default_asset = 'community-' | append: i | append: '.jpg' -%}
 
         <div class="photo-strip__item">
           {%- if img != blank -%}
-            <img
-              src="{{ img | img_url: '800x800', crop: 'center' }}"
-              alt="{{ alt | escape }}"
-              loading="lazy"
-              width="800" height="800">
+            <img src="{{ img | img_url: '800x800', crop: 'center' }}"
+                 alt="{{ alt | escape }}" loading="lazy" width="800" height="800">
           {%- else -%}
-            {%- comment -%} Fallback to default asset images {%- endcomment -%}
-            {%- if i == 1 -%}
-              <img src="{{ 'community-1.jpg' | asset_url }}" alt="{{ alt | default: 'Community' | escape }}" loading="lazy">
-            {%- elsif i == 2 -%}
-              <img src="{{ 'community-2.jpg' | asset_url }}" alt="{{ alt | default: 'Community' | escape }}" loading="lazy">
-            {%- else -%}
-              <img src="{{ 'community-3.jpg' | asset_url }}" alt="{{ alt | default: 'Community' | escape }}" loading="lazy">
-            {%- endif -%}
+            <img src="{{ default_asset | asset_url }}"
+                 alt="{{ alt | escape }}" loading="lazy">
           {%- endif -%}
         </div>
-
       {%- endfor -%}
 
     </div>
@@ -57,8 +50,22 @@
 <style>
   .photo-strip__grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
+  }
+  .photo-strip__grid--2 { grid-template-columns: repeat(2, 1fr); }
+  .photo-strip__grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .photo-strip__grid--4 { grid-template-columns: repeat(4, 1fr); }
+  .photo-strip__grid--5 {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto auto;
+  }
+  /* 5-photo layout: top row 3, bottom row 2 centered */
+  .photo-strip__grid--5 .photo-strip__item:nth-child(4) {
+    grid-column: 1 / 2;
+    margin-left: 50%;
+  }
+  .photo-strip__grid--5 .photo-strip__item:nth-child(5) {
+    grid-column: 2 / 3;
   }
   .photo-strip__item {
     aspect-ratio: 3 / 4;
@@ -72,15 +79,21 @@
     display: block;
     transition: transform 0.5s ease;
   }
-  .photo-strip__item:hover img {
-    transform: scale(1.04);
-  }
-  @media (max-width: 600px) {
-    .photo-strip__grid {
+  .photo-strip__item:hover img { transform: scale(1.04); }
+
+  @media (max-width: 700px) {
+    .photo-strip__grid--3,
+    .photo-strip__grid--4,
+    .photo-strip__grid--5 {
       grid-template-columns: 1fr 1fr;
       gap: 0.625rem;
     }
-    .photo-strip__item:last-child {
+    .photo-strip__grid--5 .photo-strip__item:nth-child(4),
+    .photo-strip__grid--5 .photo-strip__item:nth-child(5) {
+      grid-column: auto;
+      margin-left: 0;
+    }
+    .photo-strip__item:last-child:nth-child(odd) {
       grid-column: 1 / -1;
       aspect-ratio: 16 / 9;
     }
@@ -93,20 +106,35 @@
   "tag": "section",
   "class": "section-photo-strip",
   "settings": [
-    { "type": "text",         "id": "eyebrow",  "label": "Eyebrow label" },
-    { "type": "text",         "id": "heading",  "label": "Heading" },
-    { "type": "image_picker", "id": "image_1",  "label": "Photo 1" },
-    { "type": "text",         "id": "alt_1",    "label": "Photo 1 alt text", "default": "A Black woman — present, confident, sovereign." },
-    { "type": "image_picker", "id": "image_2",  "label": "Photo 2" },
-    { "type": "text",         "id": "alt_2",    "label": "Photo 2 alt text", "default": "A Black woman — present, confident, sovereign." },
-    { "type": "image_picker", "id": "image_3",  "label": "Photo 3" },
-    { "type": "text",         "id": "alt_3",    "label": "Photo 3 alt text", "default": "A Black woman — present, confident, sovereign." }
+    { "type": "text",   "id": "eyebrow",     "label": "Eyebrow label" },
+    { "type": "text",   "id": "heading",     "label": "Heading" },
+    {
+      "type": "select", "id": "photo_count", "label": "Number of photos",
+      "options": [
+        { "value": "2", "label": "2" },
+        { "value": "3", "label": "3" },
+        { "value": "4", "label": "4" },
+        { "value": "5", "label": "5" }
+      ],
+      "default": "3"
+    },
+    { "type": "image_picker", "id": "image_1", "label": "Photo 1" },
+    { "type": "text", "id": "alt_1", "label": "Photo 1 alt text", "default": "A Black woman — present, confident, sovereign." },
+    { "type": "image_picker", "id": "image_2", "label": "Photo 2" },
+    { "type": "text", "id": "alt_2", "label": "Photo 2 alt text", "default": "A Black woman — present, confident, sovereign." },
+    { "type": "image_picker", "id": "image_3", "label": "Photo 3" },
+    { "type": "text", "id": "alt_3", "label": "Photo 3 alt text", "default": "A Black woman — present, confident, sovereign." },
+    { "type": "image_picker", "id": "image_4", "label": "Photo 4" },
+    { "type": "text", "id": "alt_4", "label": "Photo 4 alt text", "default": "A Black woman — present, confident, sovereign." },
+    { "type": "image_picker", "id": "image_5", "label": "Photo 5" },
+    { "type": "text", "id": "alt_5", "label": "Photo 5 alt text", "default": "A Black woman — present, confident, sovereign." }
   ],
   "presets": [{
     "name": "Photo Strip",
     "settings": {
       "eyebrow": "The community",
-      "heading": "For women who've been overlooked long enough."
+      "heading": "For women who've been overlooked long enough.",
+      "photo_count": "3"
     }
   }]
 }

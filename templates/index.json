@@ -106,7 +106,15 @@
         "button_label": "Send me the research",
         "legal_note": "By subscribing, you agree to receive email from For Her Throne."
       }
+    },
+    "community_strip": {
+      "type": "photo-strip",
+      "settings": {
+        "eyebrow": "The community",
+        "heading": "For women who've been overlooked long enough.",
+        "photo_count": "3"
+      }
     }
   },
-  "order": ["hero", "health_stats", "ingredient_education", "ugc", "email_capture"]
+  "order": ["hero", "health_stats", "community_strip", "ingredient_education", "ugc", "email_capture"]
 }

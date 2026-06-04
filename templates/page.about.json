@@ -30,7 +30,8 @@
       "type": "photo-strip",
       "settings": {
         "eyebrow": "The community",
-        "heading": "For women who've been overlooked long enough."
+        "heading": "For women who've been overlooked long enough.",
+        "photo_count": "5"
       }
     }
   },
