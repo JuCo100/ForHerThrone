@@ -17,11 +17,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── Purchase Type Selector ───────────────────────────────────────────────────
 function initPurchaseTypeSelector() {
-  const form           = document.getElementById('product-form');
-  const intervalPicker = document.getElementById('interval-picker');
+  if (!document.getElementById('product-form')) return;
+
   const sellingPlanInput = document.getElementById('selling-plan-input');
-  const atcBtn         = document.getElementById('atc-btn');
-  if (!form) return;
+
+  // Wire interval change listeners once at page load — not inside switchPurchaseType.
+  // This avoids duplicate listeners accumulating each time subscribe is selected.
+  document.querySelectorAll('.interval-option input[name="selling_plan"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (sellingPlanInput) sellingPlanInput.value = radio.value;
+      updateSubscribePrice();
+    });
+  });
+
+  // Fallback preview radios (shown when no Seal Subscriptions selling plans exist)
+  document.querySelectorAll('.interval-option input[name="selling_plan_preview"]').forEach(radio => {
+    radio.addEventListener('change', updateSubscribePrice);
+  });
 }
 
 // Compute and render the subscribe price row based on the checked interval's save %.
@@ -69,26 +81,14 @@ window.switchPurchaseType = function(type) {
     if (labelSubscribe)   labelSubscribe.classList.add('purchase-type__option--active');
     if (labelOnetime)     labelOnetime.classList.remove('purchase-type__option--active');
 
-    // Wire up the selected interval's selling_plan id
+    // Sync selling_plan input to whichever interval is currently checked
     const checkedInterval = document.querySelector('.interval-option input[name="selling_plan"]:checked');
     if (checkedInterval && sellingPlanInput) {
       sellingPlanInput.value = checkedInterval.value;
     }
 
-    // Show discounted price in the subscribe label
+    // Render the discounted price row
     updateSubscribePrice();
-
-    // Keep selling_plan + price in sync as interval changes
-    document.querySelectorAll('.interval-option input[name="selling_plan"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        if (sellingPlanInput) sellingPlanInput.value = radio.value;
-        updateSubscribePrice();
-      });
-    });
-    // Also sync preview radios (fallback UI)
-    document.querySelectorAll('.interval-option input[name="selling_plan_preview"]').forEach(radio => {
-      radio.addEventListener('change', updateSubscribePrice);
-    });
 
   } else {
     if (intervalPicker)   intervalPicker.setAttribute('hidden', '');
