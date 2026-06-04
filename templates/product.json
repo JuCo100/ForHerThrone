@@ -3,11 +3,11 @@
     "product_main": {
       "type": "product-main",
       "settings": {
-        "fallback_description": "Daily Reign is the hormonal balance formula built from the ground up for Black women. Eight evidence-informed ingredients targeting the specific disparities documented by NIH and CDC research — from early perimenopause to iron deficiency and cycle irregularity.\n\nFormulated with full doses on the label. No proprietary blends. No guesswork.",
+        "fallback_description": "Daily Reign is the hormonal balance formula we chose for Black women — eight ingredients, each selected because of what NIH and CDC data shows about Black women's hormonal health, from early perimenopause to iron deficiency and cycle irregularity.\n\nFull doses on the label. No proprietary blends. No guesswork.",
         "show_differentiators": true
       },
       "blocks": {
-        "diff_1": { "type": "differentiator", "settings": { "icon": "✓", "title": "Built for Black women's hormonal timeline",       "body": "Addresses the 8-year earlier perimenopause onset documented by SWAN/CDC research." } },
+        "diff_1": { "type": "differentiator", "settings": { "icon": "✓", "title": "Chosen for Black women's hormonal timeline",       "body": "Addresses the 8-year earlier perimenopause onset documented by SWAN/CDC research." } },
         "diff_2": { "type": "differentiator", "settings": { "icon": "✓", "title": "Full doses. No blends. Total transparency.",        "body": "Every ingredient listed at its exact dose — no proprietary blend hiding what you're taking." } },
         "diff_3": { "type": "differentiator", "settings": { "icon": "✓", "title": "Third-party tested",                               "body": "Each batch verified for purity, potency, and label accuracy." } },
         "diff_4": { "type": "differentiator", "settings": { "icon": "✓", "title": "30-day guarantee",                                  "body": "If it's not right for you, we make it right. No hoops." } }
@@ -44,7 +44,7 @@
         "ing_5": { "type": "ingredient_row", "settings": { "icon": "🌱", "name": "Sage Leaf",           "dose": "200mg", "benefit": "Supports comfort during temperature regulation changes",  "relevance": "Hot flashes and night sweats begin earlier and present more severely in Black women. Sage Leaf targets these specific experiences at a meaningful dose." } },
         "ing_6": { "type": "ingredient_row", "settings": { "icon": "🌾", "name": "Wild Yam",            "dose": "15mg",  "benefit": "Natural precursor support for hormonal pathways",         "relevance": "A natural source of diosgenin — a precursor that supports the adrenal and reproductive hormonal pathways without synthetic intervention." } },
         "ing_7": { "type": "ingredient_row", "settings": { "icon": "🪵", "name": "Licorice Root",       "dose": "150mg", "benefit": "Adrenal and stress hormone support",                     "relevance": "Chronic stress directly disrupts hormonal health. Black women carry a disproportionate allostatic load. Licorice Root supports adrenal resilience.", "contraindication": "Consult a healthcare provider if you have high blood pressure or take blood pressure medication. Black women have higher rates of hypertension — this interaction matters." } },
-        "ing_8": { "type": "ingredient_row", "settings": { "icon": "🍃", "name": "Red Raspberry Leaf",  "dose": "50mg",  "benefit": "Menstrual comfort and pelvic wellness support",          "relevance": "A generational herb used across cultures for menstrual wellness, now formulated at a therapeutic dose that most generic products don't reach." } }
+        "ing_8": { "type": "ingredient_row", "settings": { "icon": "🍃", "name": "Red Raspberry Leaf",  "dose": "50mg",  "benefit": "Menstrual comfort and pelvic wellness support",          "relevance": "A generational herb used across cultures for menstrual wellness, now at a therapeutic dose that most generic products don't reach." } }
       },
       "blocks_order": ["ing_1","ing_2","ing_3","ing_4","ing_5","ing_6","ing_7","ing_8"]
     },

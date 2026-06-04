@@ -301,28 +301,47 @@
     btn.addEventListener('click', () => changeCart(btn.dataset.key, 0));
   });
 
-  // ── Subscribe toggle ─────────────────────────────────────────────────────
+  // ── Subscribe toggle — remove + re-add (only reliable way in Shopify) ───
   document.querySelectorAll('.cart-sub-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key    = btn.dataset.key;
-      const isOn   = btn.dataset.on === 'true';
-      const track  = btn.querySelector('.cart-sub-track');
-      const thumb  = btn.querySelector('.cart-sub-thumb');
-      const select = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
+    btn.addEventListener('click', async () => {
+      const key       = btn.dataset.key;
+      const isOn      = btn.dataset.on === 'true';
+      const nowOn     = !isOn;
+      const variantId = document.querySelector(`.cart-item[data-key="${key}"]`)?.dataset.variant;
+      const qty       = getQty(key);
+      const select    = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
+      const planId    = nowOn ? (select?.value || null) : null;
 
-      const nowOn = !isOn;
-      btn.dataset.on = nowOn;
-      btn.setAttribute('aria-pressed', nowOn);
+      // Lock the item while working
+      const item = document.querySelector(`.cart-item[data-key="${key}"]`);
+      if (item) item.classList.add('is-loading');
+      btn.disabled = true;
 
-      track.style.background = nowOn ? 'var(--color-accent)' : 'rgba(253,248,240,0.2)';
-      thumb.style.left       = nowOn ? '18px' : '2px';
+      try {
+        // Step 1 — remove current line item
+        await fetch('/cart/change.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: key, quantity: 0 }),
+        });
 
-      if (nowOn) {
-        select?.removeAttribute('hidden');
-        changeCart(key, getQty(key), select?.value || null, btn);
-      } else {
-        select?.setAttribute('hidden', '');
-        changeCart(key, getQty(key), null, btn);
+        // Step 2 — re-add with or without selling plan
+        const addBody = { items: [{ id: variantId, quantity: qty }] };
+        if (planId) addBody.items[0].selling_plan = planId;
+
+        await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(addBody),
+        });
+
+        // Step 3 — reload so cart reflects real state
+        window.location.reload();
+
+      } catch (err) {
+        console.error('Subscription toggle failed:', err);
+        if (item) item.classList.remove('is-loading');
+        btn.disabled = false;
       }
     });
   });
