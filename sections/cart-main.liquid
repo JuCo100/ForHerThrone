@@ -88,25 +88,25 @@
               {%- if item.product.selling_plan_groups.size > 0 -%}
                 <div style="margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--color-border);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
 
-                  {%- comment -%} Toggle switch {%- endcomment -%}
-                  <label class="cart-sub-switch" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.8125rem;font-weight:500;">
-                    <input type="checkbox"
-                           class="cart-sub-checkbox"
-                           data-key="{{ item.key }}"
-                           {% if is_subscribed %}checked{% endif %}
-                           style="display:none;">
+                  {%- comment -%} Toggle — click handler on button, no hidden checkbox {%- endcomment -%}
+                  <button type="button"
+                          class="cart-sub-toggle"
+                          data-key="{{ item.key }}"
+                          data-on="{{ is_subscribed }}"
+                          aria-pressed="{{ is_subscribed }}"
+                          style="display:flex;align-items:center;gap:0.5rem;background:none;border:none;cursor:pointer;font-size:0.8125rem;font-weight:500;color:var(--color-text);padding:0;">
                     <span class="cart-sub-track" style="
-                      display:inline-flex;width:36px;height:20px;border-radius:10px;
-                      background:{% if is_subscribed %}var(--color-accent){% else %}var(--color-border){% endif %};
-                      position:relative;transition:background 0.2s;flex-shrink:0;">
+                        display:inline-block;width:36px;height:20px;border-radius:10px;
+                        background:{% if is_subscribed %}var(--color-accent){% else %}rgba(253,248,240,0.2){% endif %};
+                        position:relative;transition:background 0.2s;flex-shrink:0;">
                       <span class="cart-sub-thumb" style="
-                        position:absolute;top:2px;
-                        left:{% if is_subscribed %}18px{% else %}2px{% endif %};
-                        width:16px;height:16px;border-radius:50%;
-                        background:#fff;transition:left 0.2s;"></span>
+                          position:absolute;top:2px;
+                          left:{% if is_subscribed %}18px{% else %}2px{% endif %};
+                          width:16px;height:16px;border-radius:50%;
+                          background:#fff;transition:left 0.2s;display:block;"></span>
                     </span>
                     Subscribe &amp; Save
-                  </label>
+                  </button>
 
                   {%- comment -%} Interval dropdown — shown only when subscribed {%- endcomment -%}
                   <select class="cart-interval-select"
@@ -268,22 +268,25 @@
   });
 
   // ── Subscribe toggle ─────────────────────────────────────────────────────
-  document.querySelectorAll('.cart-sub-checkbox').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const key      = cb.dataset.key;
-      const track    = cb.closest('label').querySelector('.cart-sub-track');
-      const thumb    = cb.closest('label').querySelector('.cart-sub-thumb');
-      const select   = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
+  document.querySelectorAll('.cart-sub-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key    = btn.dataset.key;
+      const isOn   = btn.dataset.on === 'true';
+      const track  = btn.querySelector('.cart-sub-track');
+      const thumb  = btn.querySelector('.cart-sub-thumb');
+      const select = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
 
-      if (cb.checked) {
-        track.style.background = 'var(--color-accent)';
-        thumb.style.left = '18px';
+      const nowOn = !isOn;
+      btn.dataset.on = nowOn;
+      btn.setAttribute('aria-pressed', nowOn);
+
+      track.style.background = nowOn ? 'var(--color-accent)' : 'rgba(253,248,240,0.2)';
+      thumb.style.left       = nowOn ? '18px' : '2px';
+
+      if (nowOn) {
         select?.removeAttribute('hidden');
-        const planId = select?.value || '';
-        changeCart(key, getQty(key), planId);
+        changeCart(key, getQty(key), select?.value || '');
       } else {
-        track.style.background = 'var(--color-border)';
-        thumb.style.left = '2px';
         select?.setAttribute('hidden', '');
         changeCart(key, getQty(key), '');
       }
