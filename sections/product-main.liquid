@@ -198,11 +198,14 @@
     {%- comment -%} ── Sticky ATC (appears when primary ATC scrolls out) ── {%- endcomment -%}
     <div class="product-main__atc-wrap" aria-label="Sticky add to cart" hidden>
       <div class="product-main__atc-inner">
-        <span class="product-main__atc-price-mini">{{ product.price | money }}</span>
+        <span class="product-main__atc-price-mini"
+              id="sticky-atc-price"
+              data-cents="{{ product.price }}">{{ product.price | money }}</span>
         <form method="post" action="/cart/add" enctype="multipart/form-data">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1">
           <input type="hidden" name="return_to" value="/cart">
+          <input type="hidden" name="selling_plan" id="sticky-selling-plan-input" value="">
           <button type="submit" class="btn btn-primary" style="padding:0.75rem 1.5rem;">
             Add to Cart
           </button>

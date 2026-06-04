@@ -37,12 +37,16 @@ function initPurchaseTypeSelector() {
 }
 
 // Compute and render the subscribe price row based on the checked interval's save %.
+// Also keeps the sticky ATC bar in sync.
 function updateSubscribePrice() {
   const priceOnetimeEl  = document.getElementById('price-onetime');
   const priceWrap       = document.getElementById('price-subscribe-wrap');
   const priceOrigEl     = document.getElementById('price-subscribe-original');
   const priceDiscEl     = document.getElementById('price-subscribe-discounted');
   const atcBtn          = document.getElementById('atc-btn');
+  const stickyPrice     = document.getElementById('sticky-atc-price');
+  const stickyPlanInput = document.getElementById('sticky-selling-plan-input');
+  const mainPlanInput   = document.getElementById('selling-plan-input');
   if (!priceOnetimeEl || !priceWrap || !priceOrigEl || !priceDiscEl) return;
 
   const originalCents = parseInt(priceOnetimeEl.dataset.cents, 10) || 0;
@@ -52,19 +56,22 @@ function updateSubscribePrice() {
                || document.querySelector('.interval-option input[name="selling_plan_preview"]:checked');
   const savePct = checked ? parseFloat(checked.dataset.savePct || '0') : 0;
 
+  // Keep sticky selling_plan in sync with main form
+  if (stickyPlanInput && mainPlanInput) stickyPlanInput.value = mainPlanInput.value;
+
   priceOrigEl.textContent = formatMoney(originalCents);
 
-  if (savePct > 0) {
-    const discountedCents = Math.round(originalCents * (1 - savePct / 100));
-    priceDiscEl.textContent = formatMoney(discountedCents);
-    priceWrap.style.display = 'flex';
-    if (atcBtn) atcBtn.textContent = `Subscribe & Save — ${formatMoney(discountedCents)}`;
-  } else {
-    // No discount on this interval — just show regular price, no strikethrough
-    priceDiscEl.textContent = formatMoney(originalCents);
-    priceWrap.style.display = 'flex';
-    if (atcBtn) atcBtn.textContent = `Subscribe & Save — ${formatMoney(originalCents)}`;
-  }
+  const displayCents = savePct > 0
+    ? Math.round(originalCents * (1 - savePct / 100))
+    : originalCents;
+
+  priceDiscEl.textContent = formatMoney(displayCents);
+  priceWrap.style.display = 'flex';
+  if (savePct > 0) priceOrigEl.style.display = 'inline';
+  else             priceOrigEl.style.display = 'none';
+
+  if (atcBtn)      atcBtn.textContent      = `Subscribe & Save — ${formatMoney(displayCents)}`;
+  if (stickyPrice) stickyPrice.textContent = formatMoney(displayCents);
 }
 
 // Called by onchange on the radio buttons
@@ -97,9 +104,16 @@ window.switchPurchaseType = function(type) {
     if (labelSubscribe)   labelSubscribe.classList.remove('purchase-type__option--active');
     if (priceWrap)        priceWrap.style.display = 'none';
 
-    // Restore price on button
-    const priceEl = document.getElementById('price-onetime');
-    if (atcBtn) atcBtn.textContent = `Add to Cart — ${priceEl ? priceEl.textContent : ''}`;
+    // Restore prices on both main and sticky buttons
+    const priceEl         = document.getElementById('price-onetime');
+    const stickyPrice     = document.getElementById('sticky-atc-price');
+    const stickyPlanInput = document.getElementById('sticky-selling-plan-input');
+    const originalText    = priceEl ? priceEl.textContent : '';
+    const originalCents   = priceEl ? parseInt(priceEl.dataset.cents, 10) : 0;
+
+    if (atcBtn)           atcBtn.textContent      = `Add to Cart — ${originalText}`;
+    if (stickyPrice)      stickyPrice.textContent = formatMoney(originalCents);
+    if (stickyPlanInput)  stickyPlanInput.value   = '';
   }
 };
 
