@@ -4,6 +4,10 @@
  * No brand-specific values hardcoded here.
  */
 
+function formatMoney(cents) {
+  return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   initEmailCapture();
   initStickyATC();
@@ -20,6 +24,37 @@ function initPurchaseTypeSelector() {
   if (!form) return;
 }
 
+// Compute and render the subscribe price row based on the checked interval's save %.
+function updateSubscribePrice() {
+  const priceOnetimeEl  = document.getElementById('price-onetime');
+  const priceWrap       = document.getElementById('price-subscribe-wrap');
+  const priceOrigEl     = document.getElementById('price-subscribe-original');
+  const priceDiscEl     = document.getElementById('price-subscribe-discounted');
+  const atcBtn          = document.getElementById('atc-btn');
+  if (!priceOnetimeEl || !priceWrap || !priceOrigEl || !priceDiscEl) return;
+
+  const originalCents = parseInt(priceOnetimeEl.dataset.cents, 10) || 0;
+
+  // Prefer real selling plans, fall back to preview inputs
+  const checked = document.querySelector('.interval-option input[name="selling_plan"]:checked')
+               || document.querySelector('.interval-option input[name="selling_plan_preview"]:checked');
+  const savePct = checked ? parseFloat(checked.dataset.savePct || '0') : 0;
+
+  priceOrigEl.textContent = formatMoney(originalCents);
+
+  if (savePct > 0) {
+    const discountedCents = Math.round(originalCents * (1 - savePct / 100));
+    priceDiscEl.textContent = formatMoney(discountedCents);
+    priceWrap.style.display = 'flex';
+    if (atcBtn) atcBtn.textContent = `Subscribe & Save — ${formatMoney(discountedCents)}`;
+  } else {
+    // No discount on this interval — just show regular price, no strikethrough
+    priceDiscEl.textContent = formatMoney(originalCents);
+    priceWrap.style.display = 'flex';
+    if (atcBtn) atcBtn.textContent = `Subscribe & Save — ${formatMoney(originalCents)}`;
+  }
+}
+
 // Called by onchange on the radio buttons
 window.switchPurchaseType = function(type) {
   const intervalPicker   = document.getElementById('interval-picker');
@@ -27,6 +62,7 @@ window.switchPurchaseType = function(type) {
   const atcBtn           = document.getElementById('atc-btn');
   const labelOnetime     = document.getElementById('label-onetime');
   const labelSubscribe   = document.getElementById('label-subscribe');
+  const priceWrap        = document.getElementById('price-subscribe-wrap');
 
   if (type === 'subscribe') {
     if (intervalPicker)   intervalPicker.removeAttribute('hidden');
@@ -39,13 +75,19 @@ window.switchPurchaseType = function(type) {
       sellingPlanInput.value = checkedInterval.value;
     }
 
-    if (atcBtn) atcBtn.textContent = 'Subscribe & Save';
+    // Show discounted price in the subscribe label
+    updateSubscribePrice();
 
-    // Keep selling_plan in sync as interval changes
+    // Keep selling_plan + price in sync as interval changes
     document.querySelectorAll('.interval-option input[name="selling_plan"]').forEach(radio => {
       radio.addEventListener('change', () => {
         if (sellingPlanInput) sellingPlanInput.value = radio.value;
+        updateSubscribePrice();
       });
+    });
+    // Also sync preview radios (fallback UI)
+    document.querySelectorAll('.interval-option input[name="selling_plan_preview"]').forEach(radio => {
+      radio.addEventListener('change', updateSubscribePrice);
     });
 
   } else {
@@ -53,6 +95,7 @@ window.switchPurchaseType = function(type) {
     if (sellingPlanInput) sellingPlanInput.value = '';
     if (labelOnetime)     labelOnetime.classList.add('purchase-type__option--active');
     if (labelSubscribe)   labelSubscribe.classList.remove('purchase-type__option--active');
+    if (priceWrap)        priceWrap.style.display = 'none';
 
     // Restore price on button
     const priceEl = document.getElementById('price-onetime');

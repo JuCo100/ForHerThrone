@@ -71,7 +71,8 @@
             <div class="purchase-type__content">
               <div class="purchase-type__top">
                 <span class="purchase-type__title">One-time purchase</span>
-                <span class="purchase-type__price" id="price-onetime">{{ product.price | money }}</span>
+                <span class="purchase-type__price" id="price-onetime"
+                      data-cents="{{ product.price }}">{{ product.price | money }}</span>
               </div>
               <p class="purchase-type__sub">Free shipping · No commitment</p>
             </div>
@@ -86,6 +87,10 @@
                 <span class="purchase-type__badge">Best value</span>
               </div>
               <p class="purchase-type__sub">Free shipping · Cancel anytime</p>
+              <div id="price-subscribe-wrap" style="display:none;align-items:center;gap:0.5rem;margin-top:0.375rem;">
+                <s id="price-subscribe-original" style="opacity:0.45;font-size:0.875rem;color:var(--color-text);text-decoration:line-through;"></s>
+                <span id="price-subscribe-discounted" style="color:var(--color-accent);font-weight:700;font-size:1rem;"></span>
+              </div>
             </div>
           </label>
 
@@ -98,16 +103,19 @@
                 {%- comment -%} Real selling plans from Seal Subscriptions / Recharge {%- endcomment -%}
                 {%- for group in product.selling_plan_groups -%}
                   {%- for plan in group.selling_plans -%}
+                    {%- assign save_pct = 0 -%}
+                    {%- if plan.price_adjustments.size > 0 -%}
+                      {%- assign adj = plan.price_adjustments.first -%}
+                      {%- if adj.value_type == 'percentage' -%}{%- assign save_pct = adj.value -%}{%- endif -%}
+                    {%- endif -%}
                     <label class="interval-option">
                       <input type="radio" name="selling_plan" value="{{ plan.id }}"
                              class="interval-option__radio"
+                             data-save-pct="{{ save_pct }}"
                              {% if forloop.first %}checked{% endif %}>
                       <span class="interval-option__label">{{ plan.name }}</span>
-                      {%- if plan.price_adjustments.size > 0 -%}
-                        {%- assign adj = plan.price_adjustments.first -%}
-                        {%- if adj.value_type == 'percentage' -%}
-                          <span class="interval-option__save">Save {{ adj.value }}%</span>
-                        {%- endif -%}
+                      {%- if save_pct > 0 -%}
+                        <span class="interval-option__save">Save {{ save_pct }}%</span>
                       {%- endif -%}
                     </label>
                   {%- endfor -%}
@@ -118,12 +126,14 @@
                   and selling plans are configured in Shopify admin.
                   These are display-only until the app is connected.
                 {%- endcomment -%}
-                {%- assign intervals = "Every month|Every 3 months|Every 6 months|Every 2 years" | split: "|" -%}
-                {%- assign saves     = "|Save 10%|Save 15%|Save 20%" | split: "|" -%}
+                {%- assign intervals  = "Every month|Every 3 months|Every 6 months|Every 2 years" | split: "|" -%}
+                {%- assign saves      = "|Save 10%|Save 15%|Save 20%" | split: "|" -%}
+                {%- assign save_pcts  = "0|10|15|20" | split: "|" -%}
                 {%- for interval in intervals -%}
                   <label class="interval-option">
                     <input type="radio" name="selling_plan_preview" value="{{ forloop.index }}"
                            class="interval-option__radio"
+                           data-save-pct="{{ save_pcts[forloop.index0] }}"
                            {% if forloop.first %}checked{% endif %}>
                     <span class="interval-option__label">{{ interval }}</span>
                     {%- if saves[forloop.index0] != blank -%}
