@@ -183,23 +183,25 @@
     if (checkout) checkout.textContent = formatted;
   }
 
-  function updateLinePrice(key, linePrice, isSubscribed) {
-    const item        = document.querySelector(`.cart-item[data-key="${key}"]`);
+  // Update price display. Pass the full line object from the Cart API.
+  function updateLinePrice(key, line) {
+    const item       = document.querySelector(`.cart-item[data-key="${key}"]`);
     if (!item) return;
-    const currentEl   = item.querySelector('.item-current-price');
-    const originalEl  = item.querySelector('.item-original-price');
-    const originalPrice = parseInt(item.dataset.originalLinePrice, 10);
+    const currentEl  = item.querySelector('.item-current-price');
+    const originalEl = item.querySelector('.item-original-price');
+    if (!currentEl || !originalEl) return;
 
-    if (currentEl) currentEl.textContent = formatMoney(linePrice);
+    const linePrice     = line.line_price;
+    const originalPrice = line.original_line_price;
+    const subscribed    = !!line.selling_plan_allocation;
 
-    if (isSubscribed && originalEl && linePrice < originalPrice) {
-      // Show strikethrough original + discounted price
+    currentEl.textContent = formatMoney(linePrice);
+
+    if (subscribed && originalPrice && originalPrice > linePrice) {
       originalEl.textContent = formatMoney(originalPrice);
       originalEl.style.display = 'inline';
-    } else if (originalEl) {
+    } else {
       originalEl.style.display = 'none';
-      // Reset original price tracker when unsubscribing
-      if (!isSubscribed) item.dataset.originalLinePrice = linePrice;
     }
   }
 
@@ -214,15 +216,14 @@
     }
   }
 
-  async function changeCart(key, quantity, sellingPlan) {
+  async function changeCart(key, quantity, sellingPlan, toggleBtn) {
     const item = document.querySelector(`.cart-item[data-key="${key}"]`);
     if (item) item.classList.add('is-loading');
 
     const body = { id: key, quantity };
-    // Only set selling_plan when it's a real ID — never send empty string
-    if (sellingPlan && sellingPlan !== '') body.selling_plan = sellingPlan;
-    if (sellingPlan === null) body.selling_plan = null;
+    if (sellingPlan) body.selling_plan = sellingPlan;
 
+    let success = false;
     try {
       const res  = await fetch('/cart/change.js', {
         method:  'POST',
@@ -231,30 +232,41 @@
       });
       const data = await res.json();
 
-      // Guard against error responses (no total_price)
       if (!data || typeof data.total_price !== 'number') {
         console.error('Cart API error:', data);
-        item?.classList.remove('is-loading');
-        return;
-      }
-
-      if (quantity === 0) {
-        removeItemFromDOM(key);
       } else {
-        const line = data.items?.find(i => i.key === key);
-        if (line) updateLinePrice(key, line.line_price, !!line.selling_plan_allocation);
-        item?.classList.remove('is-loading');
+        success = true;
+        if (quantity === 0) {
+          removeItemFromDOM(key);
+        } else {
+          const line = data.items?.find(i => i.key === key);
+          if (line) updateLinePrice(key, line);
+        }
+        updateTotals(data.total_price);
+        const countEl = document.querySelector('.cart-count');
+        if (countEl) countEl.textContent = data.item_count;
       }
-
-      updateTotals(data.total_price);
-
-      const countEl = document.querySelector('.cart-count');
-      if (countEl) countEl.textContent = data.item_count;
-
     } catch (err) {
       console.error('Cart error:', err);
-      item?.classList.remove('is-loading');
     }
+
+    item?.classList.remove('is-loading');
+
+    // If API failed and this came from a toggle, revert the toggle UI
+    if (!success && toggleBtn) revertToggle(toggleBtn, key);
+  }
+
+  function revertToggle(btn, key) {
+    const isOn  = btn.dataset.on === 'true';
+    const track = btn.querySelector('.cart-sub-track');
+    const thumb = btn.querySelector('.cart-sub-thumb');
+    const select = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
+    // Flip back
+    btn.dataset.on = !isOn;
+    track.style.background = !isOn ? 'var(--color-accent)' : 'rgba(253,248,240,0.2)';
+    thumb.style.left       = !isOn ? '18px' : '2px';
+    if (!isOn) select?.removeAttribute('hidden');
+    else select?.setAttribute('hidden', '');
   }
 
   function getQty(key) {
@@ -280,7 +292,7 @@
       const key = input.dataset.key;
       const qty = Math.max(0, parseInt(input.value, 10) || 0);
       input.value = qty;
-      debounce = setTimeout(() => changeCart(key, qty), 600);
+      debounce = setTimeout(() => changeCart(key, qty, undefined), 600);
     });
   });
 
@@ -307,10 +319,10 @@
 
       if (nowOn) {
         select?.removeAttribute('hidden');
-        changeCart(key, getQty(key), select?.value || null);
+        changeCart(key, getQty(key), select?.value || null, btn);
       } else {
         select?.setAttribute('hidden', '');
-        changeCart(key, getQty(key), null);
+        changeCart(key, getQty(key), null, btn);
       }
     });
   });
