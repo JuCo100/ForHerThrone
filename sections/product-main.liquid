@@ -73,25 +73,20 @@
         </div>
 
         {%- comment -%} ── Add to Cart form ──────────────────────────────── {%- endcomment -%}
-        {%- form 'product', product, id: 'product-form', novalidate: true -%}
+        <form method="post" action="/cart/add" id="product-form" enctype="multipart/form-data">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <input type="hidden" name="return_to" value="/cart">
 
           <button
             type="submit"
-            name="add"
             class="btn btn-primary btn-lg product-main__atc-btn product-main__atc-btn--primary"
             style="width:100%;margin-bottom:0.75rem;"
-            {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}
             aria-label="Add {{ product.title }} to cart"
           >
-            {%- if product.selected_or_first_available_variant.available -%}
-              Add to Cart — {{ product.price | money }}
-            {%- else -%}
-              Sold Out
-            {%- endif -%}
+            Add to Cart — {{ product.price | money }}
           </button>
-
-        {%- endform -%}
+        </form>
 
         {%- comment -%} CLAIMS_REVIEW: FDA disclaimer required near ATC {%- endcomment -%}
         <p class="product-main__disclaimer">{{ settings.fda_disclaimer }}</p>
@@ -121,18 +116,14 @@
     <div class="product-main__atc-wrap" aria-label="Sticky add to cart" hidden>
       <div class="product-main__atc-inner">
         <span class="product-main__atc-price-mini">{{ product.price | money }}</span>
-        {%- form 'product', product, id: 'product-form-sticky', novalidate: true -%}
+        <form method="post" action="/cart/add" enctype="multipart/form-data">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-          <button
-            type="submit"
-            name="add"
-            class="btn btn-primary"
-            style="padding:0.75rem 1.5rem;"
-            {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}
-          >
+          <input type="hidden" name="quantity" value="1">
+          <input type="hidden" name="return_to" value="/cart">
+          <button type="submit" class="btn btn-primary" style="padding:0.75rem 1.5rem;">
             Add to Cart
           </button>
-        {%- endform -%}
+        </form>
       </div>
     </div>
 
