@@ -779,13 +779,38 @@ p { max-width: 68ch; }
 
 .trust-badge {
   font-size: 0.75rem;
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-text);
-  opacity: 0.6;
-  display: flex;
+  color: var(--color-primary);
+  background: var(--color-accent);
+  border-radius: 4px;
+  padding: 0.25rem 0.625rem;
+  display: inline-flex;
   align-items: center;
   gap: 0.375rem;
+}
+
+/* Override any black/dark inline styles injected by Suppliful product descriptions */
+.product-main__description span,
+.product-main__description p,
+.product-main__description div,
+.product-main__description li {
+  color: inherit !important;
+}
+
+/* Suppliful badge pills — force them to match brand */
+.product-main__description [class*="badge"],
+.product-main__description [class*="tag"],
+.product-main__description [class*="pill"],
+.product-main__description [class*="label"],
+.product-main__description [style*="background"],
+.product-main__description [style*="color:#"],
+.product-main__description [style*="color: #"] {
+  background: var(--color-surface-light) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: 4px !important;
 }
 
 .product-main__info { padding-top: 1rem; }
