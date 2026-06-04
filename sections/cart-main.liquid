@@ -34,6 +34,7 @@
             <div class="cart-item"
                  data-key="{{ item.key }}"
                  data-variant="{{ item.variant_id }}"
+                 data-original-line-price="{{ item.line_price }}"
                  style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.25rem;transition:opacity 0.2s ease;">
 
               {%- comment -%} Main row: image + info + stepper {%- endcomment -%}
@@ -57,8 +58,13 @@
                       ↻ {{ item.selling_plan_allocation.selling_plan.name }}
                     </p>
                   {%- endif -%}
-                  <p class="item-line-price" style="color:var(--color-accent);font-weight:600;">
-                    {{ item.line_price | money }}
+                  <p class="item-line-price" style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                    <s class="item-original-price" style="display:none;opacity:0.45;font-size:0.875rem;color:var(--color-text);text-decoration:line-through;">
+                      {{ item.line_price | money }}
+                    </s>
+                    <span class="item-current-price" style="color:var(--color-accent);font-weight:600;">
+                      {{ item.line_price | money }}
+                    </span>
                   </p>
                 </div>
 
@@ -177,10 +183,24 @@
     if (checkout) checkout.textContent = formatted;
   }
 
-  function updateLinePrice(key, linePrice) {
-    const item    = document.querySelector(`.cart-item[data-key="${key}"]`);
-    const priceEl = item?.querySelector('.item-line-price');
-    if (priceEl) priceEl.textContent = formatMoney(linePrice);
+  function updateLinePrice(key, linePrice, isSubscribed) {
+    const item        = document.querySelector(`.cart-item[data-key="${key}"]`);
+    if (!item) return;
+    const currentEl   = item.querySelector('.item-current-price');
+    const originalEl  = item.querySelector('.item-original-price');
+    const originalPrice = parseInt(item.dataset.originalLinePrice, 10);
+
+    if (currentEl) currentEl.textContent = formatMoney(linePrice);
+
+    if (isSubscribed && originalEl && linePrice < originalPrice) {
+      // Show strikethrough original + discounted price
+      originalEl.textContent = formatMoney(originalPrice);
+      originalEl.style.display = 'inline';
+    } else if (originalEl) {
+      originalEl.style.display = 'none';
+      // Reset original price tracker when unsubscribing
+      if (!isSubscribed) item.dataset.originalLinePrice = linePrice;
+    }
   }
 
   function removeItemFromDOM(key) {
@@ -222,7 +242,7 @@
         removeItemFromDOM(key);
       } else {
         const line = data.items?.find(i => i.key === key);
-        if (line) updateLinePrice(key, line.line_price);
+        if (line) updateLinePrice(key, line.line_price, !!line.selling_plan_allocation);
         item?.classList.remove('is-loading');
       }
 
