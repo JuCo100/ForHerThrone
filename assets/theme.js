@@ -8,7 +8,57 @@ document.addEventListener('DOMContentLoaded', () => {
   initEmailCapture();
   initStickyATC();
   initIngredientAccordion();
+  initPurchaseTypeSelector();
 });
+
+// ── Purchase Type Selector ───────────────────────────────────────────────────
+function initPurchaseTypeSelector() {
+  const form           = document.getElementById('product-form');
+  const intervalPicker = document.getElementById('interval-picker');
+  const sellingPlanInput = document.getElementById('selling-plan-input');
+  const atcBtn         = document.getElementById('atc-btn');
+  if (!form) return;
+}
+
+// Called by onchange on the radio buttons
+window.switchPurchaseType = function(type) {
+  const intervalPicker   = document.getElementById('interval-picker');
+  const sellingPlanInput = document.getElementById('selling-plan-input');
+  const atcBtn           = document.getElementById('atc-btn');
+  const labelOnetime     = document.getElementById('label-onetime');
+  const labelSubscribe   = document.getElementById('label-subscribe');
+
+  if (type === 'subscribe') {
+    if (intervalPicker)   intervalPicker.removeAttribute('hidden');
+    if (labelSubscribe)   labelSubscribe.classList.add('purchase-type__option--active');
+    if (labelOnetime)     labelOnetime.classList.remove('purchase-type__option--active');
+
+    // Wire up the selected interval's selling_plan id
+    const checkedInterval = document.querySelector('.interval-option input[name="selling_plan"]:checked');
+    if (checkedInterval && sellingPlanInput) {
+      sellingPlanInput.value = checkedInterval.value;
+    }
+
+    if (atcBtn) atcBtn.textContent = 'Subscribe & Save';
+
+    // Keep selling_plan in sync as interval changes
+    document.querySelectorAll('.interval-option input[name="selling_plan"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (sellingPlanInput) sellingPlanInput.value = radio.value;
+      });
+    });
+
+  } else {
+    if (intervalPicker)   intervalPicker.setAttribute('hidden', '');
+    if (sellingPlanInput) sellingPlanInput.value = '';
+    if (labelOnetime)     labelOnetime.classList.add('purchase-type__option--active');
+    if (labelSubscribe)   labelSubscribe.classList.remove('purchase-type__option--active');
+
+    // Restore price on button
+    const priceEl = document.getElementById('price-onetime');
+    if (atcBtn) atcBtn.textContent = `Add to Cart — ${priceEl ? priceEl.textContent : ''}`;
+  }
+};
 
 // ── Email Capture ────────────────────────────────────────────────────────────
 function initEmailCapture() {

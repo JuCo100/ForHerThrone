@@ -62,26 +62,99 @@
           {{ product.metafields.custom.subtitle | default: settings.product_subtitle }}
         </p>
 
-        <p class="product-main__price">
-          {{ product.price | money }}
-        </p>
-        <p class="product-main__price-note">30-day supply · Free shipping on every order</p>
+        {%- comment -%} ── Purchase type selector ────────────────────────── {%- endcomment -%}
+        <div class="purchase-type" role="group" aria-label="Purchase options">
+
+          <label class="purchase-type__option purchase-type__option--active" id="label-onetime">
+            <input type="radio" name="purchase_type" value="onetime" checked
+                   onchange="switchPurchaseType('onetime')" class="purchase-type__radio">
+            <div class="purchase-type__content">
+              <div class="purchase-type__top">
+                <span class="purchase-type__title">One-time purchase</span>
+                <span class="purchase-type__price" id="price-onetime">{{ product.price | money }}</span>
+              </div>
+              <p class="purchase-type__sub">Free shipping · No commitment</p>
+            </div>
+          </label>
+
+          <label class="purchase-type__option" id="label-subscribe">
+            <input type="radio" name="purchase_type" value="subscribe"
+                   onchange="switchPurchaseType('subscribe')" class="purchase-type__radio">
+            <div class="purchase-type__content">
+              <div class="purchase-type__top">
+                <span class="purchase-type__title">Subscribe &amp; Save</span>
+                <span class="purchase-type__badge">Best value</span>
+              </div>
+              <p class="purchase-type__sub">Free shipping · Cancel anytime</p>
+            </div>
+          </label>
+
+          {%- comment -%} Interval picker — shown only when Subscribe is selected {%- endcomment -%}
+          <div class="purchase-type__intervals" id="interval-picker" hidden>
+            <p class="purchase-type__intervals-label">Delivery frequency</p>
+            <div class="purchase-type__intervals-grid" role="radiogroup" aria-label="Subscription interval">
+
+              {%- if product.selling_plan_groups.size > 0 -%}
+                {%- comment -%} Real selling plans from Seal Subscriptions / Recharge {%- endcomment -%}
+                {%- for group in product.selling_plan_groups -%}
+                  {%- for plan in group.selling_plans -%}
+                    <label class="interval-option">
+                      <input type="radio" name="selling_plan" value="{{ plan.id }}"
+                             class="interval-option__radio"
+                             {% if forloop.first %}checked{% endif %}>
+                      <span class="interval-option__label">{{ plan.name }}</span>
+                      {%- if plan.price_adjustments.size > 0 -%}
+                        {%- assign adj = plan.price_adjustments.first -%}
+                        {%- if adj.value_type == 'percentage' -%}
+                          <span class="interval-option__save">Save {{ adj.value }}%</span>
+                        {%- endif -%}
+                      {%- endif -%}
+                    </label>
+                  {%- endfor -%}
+                {%- endfor -%}
+              {%- else -%}
+                {%- comment -%}
+                  FALLBACK UI — shown until Seal Subscriptions (or Recharge) is installed
+                  and selling plans are configured in Shopify admin.
+                  These are display-only until the app is connected.
+                {%- endcomment -%}
+                {%- assign intervals = "Every month|Every 3 months|Every 6 months|Every 2 years" | split: "|" -%}
+                {%- assign saves     = ""|"Save 10%"|"Save 15%"|"Save 20%" | split: "|" -%}
+                {%- for interval in intervals -%}
+                  <label class="interval-option">
+                    <input type="radio" name="selling_plan_preview" value="{{ forloop.index }}"
+                           class="interval-option__radio"
+                           {% if forloop.first %}checked{% endif %}>
+                    <span class="interval-option__label">{{ interval }}</span>
+                    {%- if saves[forloop.index0] != blank -%}
+                      <span class="interval-option__save">{{ saves[forloop.index0] }}</span>
+                    {%- endif -%}
+                  </label>
+                {%- endfor -%}
+              {%- endif -%}
+
+            </div>
+          </div>
+        </div>
 
         {%- comment -%} CLAIMS_REVIEW: Product description — no treatment claims {%- endcomment -%}
-        <div class="product-main__description">
+        <div class="product-main__description" style="margin-top:1.5rem;">
           {{ product.description | default: section.settings.fallback_description }}
         </div>
 
-        {%- comment -%} ── Add to Cart form ──────────────────────────────── {%- endcomment -%}
+        {%- comment -%} ── Add to Cart / Subscribe form ─────────────────────── {%- endcomment -%}
         <form method="post" action="/cart/add" id="product-form" enctype="multipart/form-data">
           <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
           <input type="hidden" name="quantity" value="1">
           <input type="hidden" name="return_to" value="/cart">
+          {%- comment -%} selling_plan field populated by JS when subscribe is selected {%- endcomment -%}
+          <input type="hidden" name="selling_plan" id="selling-plan-input" value="">
 
           <button
             type="submit"
             class="btn btn-primary btn-lg product-main__atc-btn product-main__atc-btn--primary"
             style="width:100%;margin-bottom:0.75rem;"
+            id="atc-btn"
             aria-label="Add {{ product.title }} to cart"
           >
             Add to Cart — {{ product.price | money }}
