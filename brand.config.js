@@ -30,7 +30,7 @@ const BRAND_CONFIG = {
     subtitle: "Hormonal Balance & Vitality Formula",
     price:    39.99,
     currency: "USD",
-    handle:   "daily-reign",                       // Shopify product URL handle
+    handle:   "for-her-throne-daily-reign",          // Shopify product URL handle
   },
 
   // ── Color Palette ──────────────────────────────────────────────────────────
