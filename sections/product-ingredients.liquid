@@ -1,0 +1,128 @@
+{%- comment -%}
+  SECTION: product-ingredients
+  Full ingredient deep-dive on the product page.
+  This is the "why this matters for you" section — each ingredient
+  gets a row with dose, benefit claim, and community relevance.
+
+  CLAIMS_REVIEW: Every benefit line reviewed against FTC/FDA supplement
+  copy guidelines. "Supports" / "may help" / "traditionally used for"
+  language only. No "treats", "cures", "prevents", "clinically proven".
+  Source citations must link to specific published studies before launch.
+{%- endcomment -%}
+
+<section class="product-ingredients section-pad" id="ingredients" aria-labelledby="ingredients-heading">
+  <div class="container">
+
+    <header class="product-ingredients__header">
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="ingredients-heading">{{ section.settings.heading }}</h2>
+      <p class="product-ingredients__intro">{{ section.settings.intro }}</p>
+    </header>
+
+    <div class="product-ingredients__list" role="list">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+        {%- when 'ingredient_row' -%}
+          <article class="product-ingredient-row" role="listitem" {{ block.shopify_attributes }}>
+
+            <div class="product-ingredient-row__left">
+              {%- if block.settings.icon != blank -%}
+                <span style="font-size:1.75rem;display:block;margin-bottom:0.625rem;" aria-hidden="true">
+                  {{ block.settings.icon }}
+                </span>
+              {%- endif -%}
+              <h3 class="product-ingredient-row__name">{{ block.settings.name }}</h3>
+              <p class="product-ingredient-row__dose">{{ block.settings.dose }}</p>
+            </div>
+
+            <div class="product-ingredient-row__right">
+              <p class="product-ingredient-row__why-label">Why this matters for you</p>
+
+              {%- comment -%} CLAIMS_REVIEW: benefit — must be support claim, not treatment claim {%- endcomment -%}
+              <p class="product-ingredient-row__benefit">{{ block.settings.benefit }}</p>
+              <p class="product-ingredient-row__relevance">{{ block.settings.relevance }}</p>
+
+              {%- if block.settings.contraindication != blank -%}
+                <p class="product-ingredient-row__warning">
+                  ⚠ {{ block.settings.contraindication }}
+                </p>
+              {%- endif -%}
+
+              {%- if block.settings.source != blank -%}
+                <p style="margin-top:0.875rem;font-size:0.6875rem;letter-spacing:0.08em;text-transform:uppercase;opacity:0.45;">
+                  {%- comment -%} CLAIMS_REVIEW: replace source_url placeholder before launch {%- endcomment -%}
+                  Research:
+                  {%- if block.settings.source_url != blank -%}
+                    <a href="{{ block.settings.source_url }}" target="_blank" rel="noopener noreferrer">
+                      {{ block.settings.source }}
+                    </a>
+                  {%- else -%}
+                    {{ block.settings.source }}
+                  {%- endif -%}
+                </p>
+              {%- endif -%}
+            </div>
+
+          </article>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} CLAIMS_REVIEW: FDA disclaimer required on all product pages {%- endcomment -%}
+    <div class="supplement-disclaimer-block" style="margin-top:3rem;">
+      <p>{{ settings.fda_disclaimer }}</p>
+      <p>{{ settings.supplement_facts_note }}</p>
+      <p>{{ settings.consult_note }}</p>
+    </div>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Ingredients Deep-Dive",
+  "tag": "section",
+  "class": "section-product-ingredients",
+  "settings": [
+    { "type": "text",     "id": "eyebrow", "label": "Eyebrow", "default": "Full formula — every ingredient, every reason" },
+    { "type": "textarea", "id": "heading", "label": "Heading",  "default": "Not a generic formula. A targeted one." },
+    { "type": "textarea", "id": "intro",   "label": "Intro",    "default": "Every ingredient in Daily Reign was chosen for a specific reason rooted in Black women's documented health disparities — not marketing trends." }
+  ],
+  "blocks": [
+    {
+      "type": "ingredient_row",
+      "name": "Ingredient",
+      "settings": [
+        { "type": "text",     "id": "icon",              "label": "Emoji icon" },
+        { "type": "text",     "id": "name",              "label": "Ingredient name" },
+        { "type": "text",     "id": "dose",              "label": "Dose" },
+        { "type": "textarea", "id": "benefit",           "label": "Benefit (CLAIMS_REVIEW: support claims only)", "info": "Use 'supports', 'may help', 'traditionally used for'. Never 'treats', 'cures', 'prevents'." },
+        { "type": "textarea", "id": "relevance",         "label": "Why it matters for this community" },
+        { "type": "textarea", "id": "contraindication",  "label": "Contraindication warning (if any)" },
+        { "type": "text",     "id": "source",            "label": "Research source name (CLAIMS_REVIEW: exact study)" },
+        { "type": "url",      "id": "source_url",        "label": "Research source URL (CLAIMS_REVIEW: exact PubMed/journal link)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Ingredients Deep-Dive",
+      "settings": {
+        "eyebrow": "Full formula — every ingredient, every reason",
+        "heading": "Not a generic formula. A targeted one.",
+        "intro": "Every ingredient in Daily Reign was chosen for a specific reason rooted in Black women's documented health disparities — not marketing trends."
+      },
+      "blocks": [
+        { "type": "ingredient_row", "settings": { "icon": "🌿", "name": "Black Cohosh",        "dose": "160mg", "benefit": "Supports hormonal comfort and menopausal transition",                   "relevance": "Black women experience perimenopause on average 8 years earlier — Black Cohosh addresses that earlier timeline directly. This isn't a product note. It's a documented disparity." } },
+        { "type": "ingredient_row", "settings": { "icon": "🫐", "name": "Chasteberry (Vitex)", "dose": "50mg",  "benefit": "Supports cycle regularity and hormonal balance",                       "relevance": "PCOS and cycle irregularity disproportionately go undiagnosed in Black women. Vitex supports the cycle regulation they deserve and are rarely offered." } },
+        { "type": "ingredient_row", "settings": { "icon": "🌸", "name": "Dong Quai",           "dose": "150mg", "benefit": "Traditional menstrual health and comfort support",                     "relevance": "Used for centuries across Asian and African healing traditions. Largely absent from mainstream US supplement lines despite a strong traditional record." } },
+        { "type": "ingredient_row", "settings": { "icon": "🍀", "name": "Red Clover",          "dose": "400mg", "benefit": "Phytoestrogen source for hormonal equilibrium support",                "relevance": "Rich in isoflavones that support the hormonal balance disrupted by early perimenopause — a condition Black women face statistically earlier than other groups." } },
+        { "type": "ingredient_row", "settings": { "icon": "🌱", "name": "Sage Leaf",           "dose": "200mg", "benefit": "Supports comfort during temperature regulation changes",               "relevance": "Hot flashes and night sweats begin earlier and present more severely in Black women. Sage Leaf targets these specific experiences at a meaningful dose." } },
+        { "type": "ingredient_row", "settings": { "icon": "🌾", "name": "Wild Yam",            "dose": "15mg",  "benefit": "Natural precursor support for hormonal pathways",                      "relevance": "A natural source of diosgenin — a precursor that supports the adrenal and reproductive hormonal pathways without synthetic intervention." } },
+        { "type": "ingredient_row", "settings": { "icon": "🪵", "name": "Licorice Root",       "dose": "150mg", "benefit": "Adrenal and stress hormone support",                                  "relevance": "Chronic stress directly disrupts hormonal health. Black women carry a disproportionate allostatic load. Licorice Root supports adrenal resilience.", "contraindication": "Consult a healthcare provider if you have high blood pressure or take blood pressure medication. Black women have higher rates of hypertension — this interaction matters." } },
+        { "type": "ingredient_row", "settings": { "icon": "🍃", "name": "Red Raspberry Leaf",  "dose": "50mg",  "benefit": "Menstrual comfort and pelvic wellness support",                       "relevance": "A generational herb used across cultures for menstrual wellness, now formulated at a therapeutic dose that most generic products don't reach." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

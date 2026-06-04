@@ -1,0 +1,30 @@
+{
+  "sections": {
+    "about_story": {
+      "type": "about-story",
+      "settings": {
+        "eyebrow": "Our story",
+        "hero_heading": "Built for you. Finally.",
+        "hero_subheading": "The research gap is real. So is this formula.",
+        "story_heading": "The healthcare system was not built with Black women in mind.",
+        "mission": "To close the wellness gap for Black women through evidence-informed supplementation and radical transparency.",
+        "show_values": true,
+        "values_eyebrow": "What we stand for",
+        "values_heading": "Radical transparency. Evidence first. Built for you.",
+        "cta_eyebrow": "Ready to start",
+        "cta_heading": "Daily Reign is waiting.",
+        "cta_label": "Shop Daily Reign — $39.99"
+      },
+      "blocks": {
+        "para_1": { "type": "paragraph", "settings": { "content": "The healthcare system was not built with Black women in mind. The research gaps, the dismissals, the delayed diagnoses — they are not accidents. They are the result of decades of systemic exclusion from clinical trials, medical education, and supplement formulation." } },
+        "para_2": { "type": "paragraph", "settings": { "content": "For Her Throne exists because that gap is real, documented, and unacceptable. Every ingredient in Daily Reign was chosen specifically for the hormonal health challenges that disproportionately affect Black women — challenges that mainstream wellness brands ignore entirely." } },
+        "para_3": { "type": "paragraph", "settings": { "content": "This is not a product marketed to you as an afterthought. This was built from the data up, for you, first." } },
+        "val_1":  { "type": "value",     "settings": { "title": "Evidence first",       "body": "Every ingredient tied to published research. Every stat cited. No wellness theater." } },
+        "val_2":  { "type": "value",     "settings": { "title": "Radical transparency", "body": "Full doses on the label. Full ingredient stories on the site. No proprietary blends hiding what you're actually taking." } },
+        "val_3":  { "type": "value",     "settings": { "title": "Built for you",        "body": "Not adapted. Not reformulated. Built from the data up, specifically for Black women's hormonal health." } }
+      },
+      "blocks_order": ["para_1","para_2","para_3","val_1","val_2","val_3"]
+    }
+  },
+  "order": ["about_story"]
+}

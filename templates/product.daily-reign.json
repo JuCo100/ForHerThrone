@@ -1,0 +1,64 @@
+{
+  "sections": {
+    "product_main": {
+      "type": "product-main",
+      "settings": {
+        "fallback_description": "Daily Reign is the hormonal balance formula built from the ground up for Black women. Eight evidence-informed ingredients targeting the specific disparities documented by NIH and CDC research — from early perimenopause to iron deficiency and cycle irregularity.\n\nFormulated with full doses on the label. No proprietary blends. No guesswork.",
+        "show_differentiators": true
+      },
+      "blocks": {
+        "diff_1": { "type": "differentiator", "settings": { "icon": "✓", "title": "Built for Black women's hormonal timeline",       "body": "Addresses the 8-year earlier perimenopause onset documented by SWAN/CDC research." } },
+        "diff_2": { "type": "differentiator", "settings": { "icon": "✓", "title": "Full doses. No blends. Total transparency.",        "body": "Every ingredient listed at its exact dose — no proprietary blend hiding what you're taking." } },
+        "diff_3": { "type": "differentiator", "settings": { "icon": "✓", "title": "Third-party tested",                               "body": "Each batch verified for purity, potency, and label accuracy." } },
+        "diff_4": { "type": "differentiator", "settings": { "icon": "✓", "title": "30-day guarantee",                                  "body": "If it's not right for you, we make it right. No hoops." } }
+      },
+      "blocks_order": ["diff_1","diff_2","diff_3","diff_4"]
+    },
+    "health_stats": {
+      "type": "health-stats",
+      "settings": {
+        "eyebrow": "Why this formula exists",
+        "heading": "The data is not a talking point. It's a call to action.",
+        "subheading": "Published NIH and CDC research documenting what the healthcare system has long ignored."
+      },
+      "blocks": {
+        "stat_1": { "type": "stat", "settings": { "stat": "82%",           "description": "of Black women are Vitamin D deficient",                                           "source": "NIH / NHANES" } },
+        "stat_2": { "type": "stat", "settings": { "stat": "8 years",       "description": "earlier perimenopause onset in Black women on average",                            "source": "SWAN Study / CDC" } },
+        "stat_3": { "type": "stat", "settings": { "stat": "3×",            "description": "higher rate of iron deficiency anemia vs. non-Hispanic white women",               "source": "NIH / NHANES" } },
+        "stat_4": { "type": "stat", "settings": { "stat": "Underdiagnosed","description": "Black women with PCOS face significant diagnostic delays",                          "source": "NIH / Endocrine Society" } }
+      },
+      "blocks_order": ["stat_1","stat_2","stat_3","stat_4"]
+    },
+    "product_ingredients": {
+      "type": "product-ingredients",
+      "settings": {
+        "eyebrow": "Full formula — every ingredient, every reason",
+        "heading": "Not a generic formula. A targeted one.",
+        "intro": "Every ingredient in Daily Reign was chosen for a specific reason rooted in Black women's documented health disparities — not marketing trends."
+      },
+      "blocks": {
+        "ing_1": { "type": "ingredient_row", "settings": { "icon": "🌿", "name": "Black Cohosh",        "dose": "160mg", "benefit": "Supports hormonal comfort and menopausal transition",   "relevance": "Black women experience perimenopause on average 8 years earlier — Black Cohosh addresses that earlier timeline directly. This isn't a product note. It's a documented disparity." } },
+        "ing_2": { "type": "ingredient_row", "settings": { "icon": "🫐", "name": "Chasteberry (Vitex)", "dose": "50mg",  "benefit": "Supports cycle regularity and hormonal balance",         "relevance": "PCOS and cycle irregularity disproportionately go undiagnosed in Black women. Vitex supports the cycle regulation they deserve and are rarely offered." } },
+        "ing_3": { "type": "ingredient_row", "settings": { "icon": "🌸", "name": "Dong Quai",           "dose": "150mg", "benefit": "Traditional menstrual health and comfort support",       "relevance": "Used for centuries across Asian and African healing traditions. Largely absent from mainstream US supplement lines despite a strong traditional record." } },
+        "ing_4": { "type": "ingredient_row", "settings": { "icon": "🍀", "name": "Red Clover",          "dose": "400mg", "benefit": "Phytoestrogen source for hormonal equilibrium support",  "relevance": "Rich in isoflavones that support the hormonal balance disrupted by early perimenopause — a condition Black women face statistically earlier than other groups." } },
+        "ing_5": { "type": "ingredient_row", "settings": { "icon": "🌱", "name": "Sage Leaf",           "dose": "200mg", "benefit": "Supports comfort during temperature regulation changes",  "relevance": "Hot flashes and night sweats begin earlier and present more severely in Black women. Sage Leaf targets these specific experiences at a meaningful dose." } },
+        "ing_6": { "type": "ingredient_row", "settings": { "icon": "🌾", "name": "Wild Yam",            "dose": "15mg",  "benefit": "Natural precursor support for hormonal pathways",         "relevance": "A natural source of diosgenin — a precursor that supports the adrenal and reproductive hormonal pathways without synthetic intervention." } },
+        "ing_7": { "type": "ingredient_row", "settings": { "icon": "🪵", "name": "Licorice Root",       "dose": "150mg", "benefit": "Adrenal and stress hormone support",                     "relevance": "Chronic stress directly disrupts hormonal health. Black women carry a disproportionate allostatic load. Licorice Root supports adrenal resilience.", "contraindication": "Consult a healthcare provider if you have high blood pressure or take blood pressure medication. Black women have higher rates of hypertension — this interaction matters." } },
+        "ing_8": { "type": "ingredient_row", "settings": { "icon": "🍃", "name": "Red Raspberry Leaf",  "dose": "50mg",  "benefit": "Menstrual comfort and pelvic wellness support",          "relevance": "A generational herb used across cultures for menstrual wellness, now formulated at a therapeutic dose that most generic products don't reach." } }
+      },
+      "blocks_order": ["ing_1","ing_2","ing_3","ing_4","ing_5","ing_6","ing_7","ing_8"]
+    },
+    "email_capture": {
+      "type": "email-capture",
+      "settings": {
+        "eyebrow": "Stay informed",
+        "heading": "Get the research as it drops.",
+        "subheading": "Subscribe for the studies behind Daily Reign — and first access to new formulations.",
+        "input_placeholder": "your@email.com",
+        "button_label": "Send me the research",
+        "legal_note": "By subscribing, you agree to receive email from For Her Throne."
+      }
+    }
+  },
+  "order": ["product_main", "health_stats", "product_ingredients", "email_capture"]
+}

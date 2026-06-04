@@ -1,0 +1,208 @@
+{%- comment -%}
+  SECTION: product-main
+  Primary product section — image, title, price, description, sticky ATC.
+
+  COMPLIANCE:
+  - FDA disclaimer rendered near product description
+  - Supplement Facts note required
+  - No disease treatment claims in product copy
+  - CLAIMS_REVIEW: All benefit copy on this page requires legal sign-off
+{%- endcomment -%}
+
+<section class="product-main section-pad" aria-labelledby="product-title">
+  <div class="container">
+    <div class="product-main__inner">
+
+      {%- comment -%} ── Product Image ─────────────────────────────────── {%- endcomment -%}
+      <div class="product-main__image-area">
+        <div class="product-main__image-wrap">
+          {%- if product.featured_image -%}
+            <img
+              src="{{ product.featured_image | img_url: '800x800', crop: 'center' }}"
+              alt="{{ product.featured_image.alt | default: product.title | escape }}"
+              loading="eager"
+              fetchpriority="high"
+              width="800"
+              height="800"
+            >
+          {%- else -%}
+            <div class="product-main__image-placeholder" aria-label="Product image placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1"
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M14 8h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span>Product photo</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="product-main__trust-badges">
+          <span class="trust-badge">✓ 30-day guarantee</span>
+          <span class="trust-badge">✓ Free shipping $60+</span>
+          <span class="trust-badge">✓ Third-party tested</span>
+        </div>
+
+        {%- comment -%} Supplement Facts disclaimer near image per FDA best practices {%- endcomment -%}
+        <div class="supplement-disclaimer-block" style="margin-top:1.5rem;">
+          <p>{{ settings.supplement_facts_note }}</p>
+          <p>{{ settings.consult_note }}</p>
+        </div>
+      </div>
+
+      {%- comment -%} ── Product Info ──────────────────────────────────── {%- endcomment -%}
+      <div class="product-main__info">
+
+        <p class="product-main__brand-name">{{ settings.brand_name }}</p>
+
+        <h1 id="product-title" class="product-main__title">
+          {{ product.title | default: settings.product_name }}
+        </h1>
+
+        <p class="product-main__subtitle">
+          {{ product.metafields.custom.subtitle | default: settings.product_subtitle }}
+        </p>
+
+        <p class="product-main__price">
+          {{ product.price | money }}
+        </p>
+        <p class="product-main__price-note">30-day supply · Free shipping on orders $60+</p>
+
+        {%- comment -%} CLAIMS_REVIEW: Product description — no treatment claims {%- endcomment -%}
+        <div class="product-main__description">
+          {{ product.description | default: section.settings.fallback_description }}
+        </div>
+
+        {%- comment -%} ── Add to Cart form ──────────────────────────────── {%- endcomment -%}
+        {%- form 'product', product, id: 'product-form', novalidate: true -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+          <button
+            type="submit"
+            name="add"
+            class="btn btn-primary btn-lg product-main__atc-btn product-main__atc-btn--primary"
+            style="width:100%;margin-bottom:0.75rem;"
+            {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}
+            aria-label="Add {{ product.title }} to cart"
+          >
+            {%- if product.selected_or_first_available_variant.available -%}
+              Add to Cart — {{ product.price | money }}
+            {%- else -%}
+              Sold Out
+            {%- endif -%}
+          </button>
+
+        {%- endform -%}
+
+        {%- comment -%} CLAIMS_REVIEW: FDA disclaimer required near ATC {%- endcomment -%}
+        <p class="product-main__disclaimer">{{ settings.fda_disclaimer }}</p>
+
+        {%- comment -%} ── What makes this different ─────────────────────── {%- endcomment -%}
+        {%- if section.settings.show_differentiators -%}
+          <div style="margin-top:2.5rem;display:flex;flex-direction:column;gap:1rem;">
+            <p class="eyebrow" style="color:var(--color-text);opacity:0.6;">Why Daily Reign</p>
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'differentiator' -%}
+                <div style="display:flex;gap:0.875rem;align-items:flex-start;" {{ block.shopify_attributes }}>
+                  <span style="color:var(--color-accent);font-size:1.125rem;flex-shrink:0;">{{ block.settings.icon }}</span>
+                  <div>
+                    <p style="font-weight:600;font-size:0.9375rem;margin-bottom:0.125rem;">{{ block.settings.title }}</p>
+                    <p style="font-size:0.875rem;opacity:0.75;max-width:none;">{{ block.settings.body }}</p>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+      </div>
+    </div>
+
+    {%- comment -%} ── Sticky ATC (appears when primary ATC scrolls out) ── {%- endcomment -%}
+    <div class="product-main__atc-wrap" aria-label="Sticky add to cart" hidden>
+      <div class="product-main__atc-inner">
+        <span class="product-main__atc-price-mini">{{ product.price | money }}</span>
+        {%- form 'product', product, id: 'product-form-sticky', novalidate: true -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button
+            type="submit"
+            name="add"
+            class="btn btn-primary"
+            style="padding:0.75rem 1.5rem;"
+            {%- unless product.selected_or_first_available_variant.available -%}disabled{%- endunless -%}
+          >
+            Add to Cart
+          </button>
+        {%- endform -%}
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .product-main__atc-wrap { display: none; }
+  .product-main__atc-wrap.is-stuck { display: block; }
+</style>
+
+<script>
+  // Show sticky ATC when primary button scrolls out of view
+  (function() {
+    const primary = document.querySelector('.product-main__atc-btn--primary');
+    const sticky  = document.querySelector('.product-main__atc-wrap');
+    if (!primary || !sticky) return;
+    sticky.removeAttribute('hidden');
+
+    const obs = new IntersectionObserver(([e]) => {
+      sticky.classList.toggle('is-stuck', !e.isIntersecting);
+    }, { rootMargin: '-80px 0px 0px 0px' });
+    obs.observe(primary);
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "tag": "section",
+  "class": "section-product-main",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "fallback_description",
+      "label": "Fallback description (if product has none)",
+      "info": "CLAIMS_REVIEW: no treatment claims",
+      "default": "Daily Reign is the hormonal balance formula built from the ground up for Black women. Eight evidence-informed ingredients targeting the specific disparities documented by NIH and CDC research — from early perimenopause to iron deficiency and cycle irregularity.\n\nFormulated with full doses on the label. No proprietary blends. No guesswork."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_differentiators",
+      "label": "Show 'Why Daily Reign' list",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "differentiator",
+      "name": "Differentiator point",
+      "settings": [
+        { "type": "text", "id": "icon",  "label": "Emoji icon", "default": "✓" },
+        { "type": "text", "id": "title", "label": "Title",      "default": "Built for Black women's hormonal timeline" },
+        { "type": "textarea", "id": "body",  "label": "Body",   "default": "Not adapted from a generic formula. Designed from NIH disparity data." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Main",
+      "settings": {
+        "show_differentiators": true
+      },
+      "blocks": [
+        { "type": "differentiator", "settings": { "icon": "✓", "title": "Built for Black women's hormonal timeline", "body": "Addresses the 8-year earlier perimenopause onset documented by SWAN/CDC research." } },
+        { "type": "differentiator", "settings": { "icon": "✓", "title": "Full doses. No blends. Total transparency.", "body": "Every ingredient listed at its exact dose — no proprietary blend hiding." } },
+        { "type": "differentiator", "settings": { "icon": "✓", "title": "Third-party tested", "body": "Each batch verified for purity, potency, and label accuracy." } },
+        { "type": "differentiator", "settings": { "icon": "✓", "title": "30-day guarantee", "body": "If it's not right for you, we make it right. No hoops." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

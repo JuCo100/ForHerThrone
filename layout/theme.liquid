@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en" class="brand-{{ settings.brand_handle }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+
+  <title>
+    {{ page_title }}{% if page_title != shop.name %} — {{ shop.name }}{% endif %}
+  </title>
+
+  {% if page_description %}
+    <meta name="description" content="{{ page_description | escape }}">
+  {% endif %}
+
+  {%- comment -%} Canonical & OG {%- endcomment -%}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:title" content="{{ page_title | escape }}">
+  <meta property="og:type" content="website">
+  {% if page_image %}
+    <meta property="og:image" content="{{ page_image | img_url: '1200x630', crop: 'center' }}">
+  {% endif %}
+
+  {%- comment -%} Google Fonts {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+
+  {%- comment -%}
+    CSS CUSTOM PROPERTIES — all color/font values come from settings_data.json
+    which mirrors brand.config.js. To retheme: update settings_data.json (or
+    use the Shopify theme editor) — zero template changes required.
+  {%- endcomment -%}
+  <style>
+    :root {
+      --color-primary:       {{ settings.color_primary }};
+      --color-accent:        {{ settings.color_accent }};
+      --color-secondary:     {{ settings.color_secondary }};
+      --color-text:          {{ settings.color_text }};
+      --color-text-dark:     {{ settings.color_text_dark }};
+      --color-surface:       {{ settings.color_surface }};
+      --color-surface-light: {{ settings.color_surface_light }};
+      --color-accent-light:  {{ settings.color_accent_light }};
+      --color-border:        {{ settings.color_accent }}40;
+
+      --font-heading: {{ settings.font_heading }};
+      --font-body:    {{ settings.font_body }};
+
+      --max-width: 1200px;
+      --section-pad: clamp(4rem, 8vw, 8rem);
+      --card-radius: 12px;
+      --transition: 0.25s ease;
+    }
+  </style>
+
+  {{ content_for_header }}
+
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+</head>
+
+<body class="brand-{{ settings.brand_handle }}">
+
+  {%- comment -%} ── Site Header ──────────────────────────────────────────── {%- endcomment -%}
+  <header class="site-header" role="banner">
+    <div class="site-header__inner container">
+      <a href="/" class="site-header__logo" aria-label="{{ settings.brand_name }} — home">
+        <span class="site-header__logo-text">{{ settings.brand_name }}</span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Main navigation">
+        <ul class="site-header__nav-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/products/{{ settings.product_handle }}">Shop</a></li>
+          <li><a href="/pages/about">About</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <a href="/cart" class="site-header__cart" aria-label="Cart ({{ cart.item_count }} items)">
+          Cart
+          {%- if cart.item_count > 0 -%}
+            <span class="cart-count">{{ cart.item_count }}</span>
+          {%- endif -%}
+        </a>
+      </div>
+    </div>
+  </header>
+
+  {%- comment -%} ── Main Content ─────────────────────────────────────────── {%- endcomment -%}
+  <main id="main-content" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {%- comment -%} ── Site Footer ──────────────────────────────────────────── {%- endcomment -%}
+  <footer class="site-footer" role="contentinfo">
+    <div class="site-footer__inner container">
+
+      <div class="site-footer__brand">
+        <p class="site-footer__logo-text">{{ settings.brand_name }}</p>
+        <p class="site-footer__tagline">{{ settings.footer_tagline }}</p>
+      </div>
+
+      <nav class="site-footer__nav" aria-label="Footer navigation">
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/products/{{ settings.product_handle }}">Shop Daily Reign</a></li>
+          <li><a href="/pages/about">About</a></li>
+          <li><a href="/policies/privacy-policy">Privacy</a></li>
+          <li><a href="/policies/terms-of-service">Terms</a></li>
+          <li><a href="/policies/refund-policy">Refund Policy</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-footer__social">
+        <a href="https://instagram.com/{{ settings.social_instagram }}" aria-label="Instagram" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://tiktok.com/@{{ settings.social_tiktok }}" aria-label="TikTok" target="_blank" rel="noopener">TikTok</a>
+      </div>
+
+      <div class="site-footer__legal">
+        {%- comment -%} CLAIMS_REVIEW: FDA disclaimer must appear in footer on all pages {%- endcomment -%}
+        <p class="fda-disclaimer">{{ settings.fda_disclaimer }}</p>
+        {{ settings.footer_legal_copy }}
+      </div>
+
+    </div>
+  </footer>
+
+  {%- comment -%} Brand config available to all frontend JS {%- endcomment -%}
+  <script src="{{ 'brand.config.js' | asset_url }}" defer></script>
+  <script src="{{ 'theme.js' | asset_url }}" defer></script>
+
+</body>
+</html>

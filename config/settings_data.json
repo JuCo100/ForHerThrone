@@ -1,0 +1,29 @@
+{
+  "current": {
+    "brand_name":         "For Her Throne",
+    "brand_handle":       "for-her-throne",
+    "brand_tagline":      "The healthcare system wasn't built with you in mind. For Her Throne was.",
+    "brand_community":    "Black women",
+    "product_name":       "For Her Throne Daily Reign",
+    "product_subtitle":   "Hormonal Balance & Vitality Formula",
+    "product_handle":     "daily-reign",
+    "color_primary":      "#0D0818",
+    "color_accent":       "#C9A84C",
+    "color_secondary":    "#4A2882",
+    "color_text":         "#FDF8F0",
+    "color_text_dark":    "#0D0818",
+    "color_surface":      "#1A1230",
+    "color_surface_light":"#231A3C",
+    "color_accent_light": "#E8C97A",
+    "font_heading":       "'Playfair Display', Georgia, serif",
+    "font_body":          "'Inter', system-ui, -apple-system, sans-serif",
+    "fda_disclaimer":     "*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease.",
+    "supplement_facts_note": "See Supplement Facts panel for complete ingredient and dosage information.",
+    "consult_note":       "Consult your healthcare provider before starting any new supplement, especially if pregnant, nursing, or managing a medical condition.",
+    "social_instagram":   "fortherthrone",
+    "social_tiktok":      "fortherthrone",
+    "creator_hashtag":    "#ForHerThrone",
+    "footer_tagline":     "Built for you. Finally.",
+    "footer_legal_copy":  "<p>\u00a9 2024 For Her Throne. All rights reserved.</p>"
+  }
+}

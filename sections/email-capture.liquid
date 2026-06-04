@@ -1,0 +1,72 @@
+{%- comment -%}
+  SECTION: email-capture
+  Newsletter / lead capture. Positioned as research access, not a sale.
+  Copy angle: "Get the studies" — educational credibility building.
+{%- endcomment -%}
+
+<section class="email-capture section-pad" aria-labelledby="email-capture-heading">
+  <div class="container">
+
+    <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    <h2 id="email-capture-heading" class="email-capture__heading">
+      {{ section.settings.heading }}
+    </h2>
+    <p class="email-capture__subheading">{{ section.settings.subheading }}</p>
+
+    {%- form 'customer', class: 'email-capture__form', id: 'email-capture-form' -%}
+      <input type="hidden" name="form_type" value="customer">
+      <input type="hidden" name="contact[tags]" value="newsletter,{{ settings.brand_handle }}-subscriber">
+
+      <label for="email-capture-input" class="visually-hidden">Email address</label>
+      <input
+        type="email"
+        id="email-capture-input"
+        name="contact[email]"
+        class="email-capture__input"
+        placeholder="{{ section.settings.input_placeholder }}"
+        required
+        autocomplete="email"
+        aria-label="{{ section.settings.input_placeholder }}"
+      >
+
+      <button type="submit" class="btn btn-primary">
+        {{ section.settings.button_label }}
+      </button>
+    {%- endform -%}
+
+    <p class="email-capture__legal">
+      {{ section.settings.legal_note }}
+      No spam. Unsubscribe anytime.
+    </p>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Email Capture",
+  "tag": "section",
+  "class": "section-email-capture",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",            "label": "Eyebrow",            "default": "The research, in your inbox" },
+    { "type": "textarea", "id": "heading",             "label": "Heading",            "default": "Get the studies behind the formula." },
+    { "type": "textarea", "id": "subheading",          "label": "Subheading",         "default": "We send the NIH and CDC research on Black women's hormonal health directly to your inbox — plus early access to formulation updates." },
+    { "type": "text",     "id": "input_placeholder",   "label": "Input placeholder",  "default": "your@email.com" },
+    { "type": "text",     "id": "button_label",        "label": "Button label",       "default": "Send me the research" },
+    { "type": "textarea", "id": "legal_note",          "label": "Legal note",         "default": "By subscribing, you agree to receive email from For Her Throne." }
+  ],
+  "presets": [
+    {
+      "name": "Email Capture",
+      "settings": {
+        "eyebrow": "The research, in your inbox",
+        "heading": "Get the studies behind the formula.",
+        "subheading": "We send the NIH and CDC research on Black women's hormonal health directly to your inbox — plus early access to formulation updates.",
+        "input_placeholder": "your@email.com",
+        "button_label": "Send me the research",
+        "legal_note": "By subscribing, you agree to receive email from For Her Throne."
+      }
+    }
+  ]
+}
+{% endschema %}

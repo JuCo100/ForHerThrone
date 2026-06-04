@@ -1,0 +1,110 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {
+        "eyebrow": "Hormonal health for Black women",
+        "heading": "The healthcare system wasn't built with you in mind.\n[accent]For Her Throne was.[/accent]",
+        "subheading": "Daily Reign is the hormonal balance formula built specifically for the disparities Black women face — backed by NIH and CDC data, not guesswork.",
+        "cta_primary": "Shop Daily Reign — $39.99",
+        "cta_secondary": "Our story",
+        "social_proof": "Formulated from the data. Built for you."
+      }
+    },
+    "health_stats": {
+      "type": "health-stats",
+      "settings": {
+        "eyebrow": "The data is clear",
+        "heading": "Black women's health has been systemically overlooked.",
+        "subheading": "These aren't editorial claims. These are published findings from NIH and CDC research.",
+        "context_note": "For Her Throne was built in direct response to this data. Every ingredient is chosen because of these disparities."
+      },
+      "blocks": {
+        "stat_1": {
+          "type": "stat",
+          "settings": {
+            "stat": "82%",
+            "description": "of Black women are Vitamin D deficient",
+            "source": "NIH / National Health and Nutrition Examination Survey",
+            "source_url": ""
+          }
+        },
+        "stat_2": {
+          "type": "stat",
+          "settings": {
+            "stat": "8 years",
+            "description": "earlier perimenopause onset compared to white women on average",
+            "source": "Study of Women's Health Across the Nation (SWAN), CDC",
+            "source_url": ""
+          }
+        },
+        "stat_3": {
+          "type": "stat",
+          "settings": {
+            "stat": "3×",
+            "description": "higher rate of iron deficiency anemia vs. non-Hispanic white women",
+            "source": "NIH / National Health and Nutrition Examination Survey",
+            "source_url": ""
+          }
+        },
+        "stat_4": {
+          "type": "stat",
+          "settings": {
+            "stat": "Underdiagnosed",
+            "description": "Black women with PCOS face significant diagnostic delays and dismissal",
+            "source": "NIH / Endocrine Society Research",
+            "source_url": ""
+          }
+        }
+      },
+      "blocks_order": ["stat_1", "stat_2", "stat_3", "stat_4"]
+    },
+    "ingredient_education": {
+      "type": "ingredient-education",
+      "settings": {
+        "eyebrow": "What's inside — and why",
+        "heading": "Every ingredient chosen for a reason. Your reason.",
+        "intro": "Daily Reign isn't a generic women's multi. Each of the 8 ingredients was selected specifically because of documented disparities in Black women's hormonal health.",
+        "cta_label": "See full ingredient breakdown"
+      },
+      "blocks": {
+        "ing_1": { "type": "ingredient", "settings": { "icon": "🌿", "name": "Black Cohosh",        "dose": "160mg", "benefit": "Supports hormonal comfort and menopausal transition",  "relevance": "Black women experience perimenopause on average 8 years earlier — Black Cohosh addresses that earlier timeline directly." } },
+        "ing_2": { "type": "ingredient", "settings": { "icon": "🫐", "name": "Chasteberry (Vitex)", "dose": "50mg",  "benefit": "Supports cycle regularity and hormonal balance",        "relevance": "PCOS and cycle irregularity disproportionately go undiagnosed in Black women. Vitex supports the cycle regulation they deserve." } },
+        "ing_3": { "type": "ingredient", "settings": { "icon": "🌸", "name": "Dong Quai",           "dose": "150mg", "benefit": "Traditional menstrual health and comfort support",      "relevance": "Used for centuries across healing traditions — largely absent from mainstream US supplement lines." } },
+        "ing_4": { "type": "ingredient", "settings": { "icon": "🍀", "name": "Red Clover",          "dose": "400mg", "benefit": "Phytoestrogen source for hormonal equilibrium support", "relevance": "Rich in isoflavones that support the hormonal balance disrupted by early perimenopause." } },
+        "ing_5": { "type": "ingredient", "settings": { "icon": "🌱", "name": "Sage Leaf",           "dose": "200mg", "benefit": "Supports comfort during temperature regulation changes", "relevance": "Hot flashes and night sweats begin earlier and more severely in Black women. Sage Leaf targets these experiences." } },
+        "ing_6": { "type": "ingredient", "settings": { "icon": "🌾", "name": "Wild Yam",            "dose": "15mg",  "benefit": "Natural precursor support for hormonal pathways",        "relevance": "A natural source of diosgenin — supporting the adrenal and reproductive hormonal pathways." } },
+        "ing_7": { "type": "ingredient", "settings": { "icon": "🪵", "name": "Licorice Root",       "dose": "150mg", "benefit": "Adrenal and stress hormone support",                    "relevance": "Chronic stress disrupts hormonal health. Black women carry a disproportionate allostatic load — Licorice Root supports adrenal resilience.", "contraindication": "Consult a healthcare provider if you have high blood pressure or take blood pressure medication." } },
+        "ing_8": { "type": "ingredient", "settings": { "icon": "🍃", "name": "Red Raspberry Leaf",  "dose": "50mg",  "benefit": "Menstrual comfort and pelvic wellness support",         "relevance": "A generational herb used across cultures for menstrual wellness, now at a therapeutic dose." } }
+      },
+      "blocks_order": ["ing_1","ing_2","ing_3","ing_4","ing_5","ing_6","ing_7","ing_8"]
+    },
+    "ugc": {
+      "type": "ugc-placeholder",
+      "settings": {
+        "eyebrow": "Real stories",
+        "heading": "The community is building its own evidence.",
+        "subheading": "Real women sharing their Daily Reign journey — unscripted, always their own words.",
+        "cta_label": "Start your Daily Reign"
+      },
+      "blocks": {
+        "tile_1": { "type": "video_tile", "settings": {} },
+        "tile_2": { "type": "video_tile", "settings": {} },
+        "tile_3": { "type": "video_tile", "settings": {} }
+      },
+      "blocks_order": ["tile_1","tile_2","tile_3"]
+    },
+    "email_capture": {
+      "type": "email-capture",
+      "settings": {
+        "eyebrow": "The research, in your inbox",
+        "heading": "Get the studies behind the formula.",
+        "subheading": "We send the NIH and CDC research on Black women's hormonal health directly to your inbox — plus early access to formulation updates.",
+        "input_placeholder": "your@email.com",
+        "button_label": "Send me the research",
+        "legal_note": "By subscribing, you agree to receive email from For Her Throne."
+      }
+    }
+  },
+  "order": ["hero", "health_stats", "ingredient_education", "ugc", "email_capture"]
+}

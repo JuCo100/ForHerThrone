@@ -1,0 +1,70 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "For Her Throne",
+    "theme_version": "1.0.0",
+    "theme_author": "For Her Throne",
+    "theme_documentation_url": "",
+    "theme_support_url": ""
+  },
+  {
+    "name": "Brand Identity",
+    "settings": [
+      { "type": "text",     "id": "brand_name",        "label": "Brand Name",        "default": "For Her Throne" },
+      { "type": "text",     "id": "brand_tagline",     "label": "Brand Tagline",     "default": "The healthcare system wasn't built with you in mind. For Her Throne was." },
+      { "type": "text",     "id": "brand_community",   "label": "Target Community",  "default": "Black women" },
+      { "type": "text",     "id": "brand_handle",      "label": "Brand Handle (CSS-safe, no spaces)", "default": "for-her-throne" }
+    ]
+  },
+  {
+    "name": "Product",
+    "settings": [
+      { "type": "text",     "id": "product_name",      "label": "Product Name",      "default": "For Her Throne Daily Reign" },
+      { "type": "text",     "id": "product_subtitle",  "label": "Product Subtitle",  "default": "Hormonal Balance & Vitality Formula" },
+      { "type": "text",     "id": "product_handle",    "label": "Shopify Product Handle", "default": "daily-reign" }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_primary",      "label": "Primary (dark background)", "default": "#0D0818" },
+      { "type": "color", "id": "color_accent",       "label": "Accent (gold, CTAs)",       "default": "#C9A84C" },
+      { "type": "color", "id": "color_secondary",    "label": "Secondary (purple)",        "default": "#4A2882" },
+      { "type": "color", "id": "color_text",         "label": "Text on dark",              "default": "#FDF8F0" },
+      { "type": "color", "id": "color_text_dark",    "label": "Text on light",             "default": "#0D0818" },
+      { "type": "color", "id": "color_surface",      "label": "Card surface",              "default": "#1A1230" },
+      { "type": "color", "id": "color_surface_light","label": "Card surface (elevated)",   "default": "#231A3C" },
+      { "type": "color", "id": "color_accent_light", "label": "Accent light (hover)",      "default": "#E8C97A" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "text", "id": "font_heading", "label": "Heading font stack", "default": "'Playfair Display', Georgia, serif" },
+      { "type": "text", "id": "font_body",    "label": "Body font stack",    "default": "'Inter', system-ui, sans-serif" }
+    ]
+  },
+  {
+    "name": "Legal & Compliance",
+    "settings": [
+      { "type": "textarea", "id": "fda_disclaimer",     "label": "FDA Disclaimer",            "default": "*These statements have not been evaluated by the Food and Drug Administration. This product is not intended to diagnose, treat, cure, or prevent any disease." },
+      { "type": "text",     "id": "supplement_facts_note","label": "Supplement Facts Note",   "default": "See Supplement Facts panel for complete ingredient and dosage information." },
+      { "type": "text",     "id": "consult_note",       "label": "Healthcare Provider Note",  "default": "Consult your healthcare provider before starting any new supplement, especially if pregnant, nursing, or managing a medical condition." }
+    ]
+  },
+  {
+    "name": "Social",
+    "settings": [
+      { "type": "text", "id": "social_instagram",   "label": "Instagram handle (no @)", "default": "fortherthrone" },
+      { "type": "text", "id": "social_tiktok",      "label": "TikTok handle (no @)",    "default": "fortherthrone" },
+      { "type": "text", "id": "creator_hashtag",    "label": "Creator Hashtag",         "default": "#ForHerThrone" }
+    ]
+  },
+  {
+    "name": "Footer",
+    "settings": [
+      { "type": "text",     "id": "footer_tagline",   "label": "Footer tagline",   "default": "Built for you. Finally." },
+      { "type": "richtext", "id": "footer_legal_copy","label": "Footer legal copy", "default": "<p>© 2024 For Her Throne. All rights reserved.</p>" }
+    ]
+  }
+]

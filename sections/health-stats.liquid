@@ -1,0 +1,176 @@
+{%- comment -%}
+  SECTION: health-stats
+  Displays the 4 NIH/CDC health disparity statistics.
+
+  CLAIMS_REVIEW: Every stat shown here must have a verified source URL
+  before this page goes live. The source links below are placeholders.
+  Legal/medical review required prior to launch.
+
+  Copy rules:
+  - Never claim the product addresses these stats directly
+  - Stats describe documented health disparities, not product benefits
+  - "This is why we built X" is acceptable framing
+  - "Our product reduces X" is NOT acceptable
+{%- endcomment -%}
+
+<section class="health-stats section-pad" aria-labelledby="stats-heading">
+  <div class="container">
+
+    <header class="health-stats__header">
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="stats-heading">{{ section.settings.heading }}</h2>
+      <p class="health-stats__subheading">
+        {%- comment -%} CLAIMS_REVIEW: Source attribution must be precise {%- endcomment -%}
+        {{ section.settings.subheading }}
+      </p>
+    </header>
+
+    <div class="health-stats__grid" role="list">
+
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+        {%- when 'stat' -%}
+          <article class="stat-card" role="listitem" {{ block.shopify_attributes }}>
+            <p class="stat-card__number" aria-label="Statistic: {{ block.settings.stat }}">
+              {{ block.settings.stat }}
+            </p>
+            <p class="stat-card__description">{{ block.settings.description }}</p>
+            {%- if block.settings.source != blank -%}
+              <p class="stat-card__source">
+                {%- comment -%} CLAIMS_REVIEW: replace source_url with exact article URL {%- endcomment -%}
+                Source:
+                {%- if block.settings.source_url != blank -%}
+                  <a href="{{ block.settings.source_url }}" target="_blank" rel="noopener noreferrer">
+                    {{ block.settings.source }}
+                  </a>
+                {%- else -%}
+                  {{ block.settings.source }}
+                {%- endif -%}
+              </p>
+            {%- endif -%}
+          </article>
+
+        {%- endcase -%}
+      {%- endfor -%}
+
+    </div>
+
+    {%- if section.settings.context_note != blank -%}
+      <p class="text-center" style="margin-top:2.5rem;font-size:0.9375rem;opacity:0.65;max-width:70ch;margin-left:auto;margin-right:auto;">
+        {{ section.settings.context_note }}
+      </p>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Health Disparity Stats",
+  "tag": "section",
+  "class": "section-health-stats",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "The data is clear"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Black women's health has been systemically overlooked."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "These aren't editorial claims. These are published findings from NIH and CDC research."
+    },
+    {
+      "type": "textarea",
+      "id": "context_note",
+      "label": "Context note below stats (optional)",
+      "default": "For Her Throne was built in direct response to this data. Every ingredient is chosen because of these disparities."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "stat",
+          "label": "Statistic (bold number/label)",
+          "default": "82%"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "of Black women are Vitamin D deficient"
+        },
+        {
+          "type": "text",
+          "id": "source",
+          "label": "Source name",
+          "default": "NIH / National Health and Nutrition Examination Survey"
+        },
+        {
+          "type": "url",
+          "id": "source_url",
+          "label": "Source URL (CLAIMS_REVIEW: must be exact article, not homepage)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Health Disparity Stats",
+      "settings": {
+        "eyebrow": "The data is clear",
+        "heading": "Black women's health has been systemically overlooked.",
+        "subheading": "These aren't editorial claims. These are published findings from NIH and CDC research.",
+        "context_note": "For Her Throne was built in direct response to this data. Every ingredient is chosen because of these disparities."
+      },
+      "blocks": [
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "82%",
+            "description": "of Black women are Vitamin D deficient",
+            "source": "NIH / National Health and Nutrition Examination Survey"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "8 years",
+            "description": "earlier perimenopause onset compared to white women on average",
+            "source": "Study of Women's Health Across the Nation (SWAN), CDC"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "3×",
+            "description": "higher rate of iron deficiency anemia vs. non-Hispanic white women",
+            "source": "NIH / National Health and Nutrition Examination Survey"
+          }
+        },
+        {
+          "type": "stat",
+          "settings": {
+            "stat": "Underdiagnosed",
+            "description": "Black women with PCOS face significant diagnostic delays and dismissal",
+            "source": "NIH / Endocrine Society Research"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,37 @@
+{
+  "general": {
+    "accessibility": {
+      "skip_to_content": "Skip to content"
+    },
+    "currency": {
+      "label": "Currency"
+    }
+  },
+  "products": {
+    "product": {
+      "add_to_cart": "Add to Cart",
+      "sold_out": "Sold Out",
+      "unavailable": "Unavailable",
+      "quantity": {
+        "label": "Quantity",
+        "increase": "Increase quantity",
+        "decrease": "Decrease quantity"
+      }
+    }
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "checkout": "Check out"
+  },
+  "sections": {
+    "header": {
+      "menu": "Menu",
+      "cart": "Cart"
+    },
+    "footer": {
+      "copyright": "© {{ year }} {{ brand }}. All rights reserved."
+    }
+  }
+}

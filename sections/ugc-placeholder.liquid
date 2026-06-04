@@ -1,0 +1,139 @@
+{%- comment -%}
+  SECTION: ugc-placeholder
+  Creator/UGC video grid — placeholders until real content arrives.
+
+  COMPLIANCE RULES:
+  - Creator content must be labeled as individual experience
+  - Brand is NOT responsible for health claims in creator posts
+  - Each tile should link to the creator's original post, not rehost
+  - Disclosure text is required on every creator tile
+  - CLAIMS_REVIEW: Do not curate creator content that makes treatment claims
+{%- endcomment -%}
+
+<section class="ugc section-pad" aria-labelledby="ugc-heading">
+  <div class="container">
+
+    <header class="ugc__header">
+      <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+      <h2 id="ugc-heading">{{ section.settings.heading }}</h2>
+      <p style="margin:1rem auto 0;font-size:1.0625rem;opacity:0.8;max-width:52ch;">
+        {{ section.settings.subheading }}
+      </p>
+    </header>
+
+    <p class="ugc__hashtag">{{ settings.creator_hashtag }}</p>
+
+    <div class="ugc__grid" role="list" aria-label="Community stories">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+
+        {%- when 'video_tile' -%}
+          {%- if block.settings.video_url != blank or block.settings.thumbnail != blank -%}
+            <article class="ugc__tile" role="listitem" {{ block.shopify_attributes }}>
+              {%- if block.settings.thumbnail != blank -%}
+                <a href="{{ block.settings.video_url }}" target="_blank" rel="noopener noreferrer"
+                   aria-label="Creator story from {{ block.settings.creator_handle | default: 'a community member' }}">
+                  <img src="{{ block.settings.thumbnail | img_url: '400x711', crop: 'center' }}"
+                       alt="{{ block.settings.creator_handle | default: 'Community member' }} sharing their Daily Reign experience"
+                       loading="lazy"
+                       style="width:100%;height:100%;object-fit:cover;border-radius:12px;">
+                </a>
+              {%- endif -%}
+              {%- comment -%} CLAIMS_REVIEW: disclosure required per creator tile {%- endcomment -%}
+              <p class="ugc__tile-disclosure" style="font-size:0.6875rem;opacity:0.45;margin-top:0.5rem;text-align:center;">
+                {{ settings.fda_disclaimer | truncate: 80 }}
+                {{ block.settings.creator_handle | prepend: "@" }}
+                &mdash; {{ settings.legal.creatorDisclaimer | default: "Individual experience." }}
+              </p>
+            </article>
+          {%- else -%}
+            {%- comment -%} Placeholder tile shown until creator content is sourced {%- endcomment -%}
+            <div class="ugc__placeholder-tile" role="listitem" {{ block.shopify_attributes }}
+                 aria-label="Video placeholder — creator content coming soon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              <span>Creator story</span>
+            </div>
+          {%- endif -%}
+
+        {%- endcase -%}
+      {%- endfor -%}
+
+      {%- comment -%}
+        Fill remaining placeholders to always show 3 tiles minimum
+      {%- endcomment -%}
+      {%- assign filled = section.blocks.size -%}
+      {%- if filled < 3 -%}
+        {%- for i in (filled..2) -%}
+          <div class="ugc__placeholder-tile" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <span>Creator story</span>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    <div class="text-center">
+      <a href="/products/{{ settings.product_handle }}" class="btn btn-primary">
+        {{ section.settings.cta_label }}
+      </a>
+    </div>
+
+    {%- comment -%} CLAIMS_REVIEW: Creator disclosure required per FTC guidelines {%- endcomment -%}
+    <p class="ugc__disclaimer">
+      Creator content reflects individual experience and is not a brand health claim.
+      Individual results vary. {{ settings.fda_disclaimer }}
+    </p>
+
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "UGC / Creator Videos",
+  "tag": "section",
+  "class": "section-ugc",
+  "settings": [
+    { "type": "text",     "id": "eyebrow",    "label": "Eyebrow",    "default": "Real stories" },
+    { "type": "textarea", "id": "heading",    "label": "Heading",    "default": "The community is building its own evidence." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Real women sharing their Daily Reign journey — unscripted, unsponsored claims, always their own words." },
+    { "type": "text",     "id": "cta_label",  "label": "CTA label",  "default": "Start your Daily Reign" }
+  ],
+  "blocks": [
+    {
+      "type": "video_tile",
+      "name": "Creator Tile",
+      "limit": 6,
+      "settings": [
+        { "type": "image_picker", "id": "thumbnail",        "label": "Video thumbnail image" },
+        { "type": "url",          "id": "video_url",        "label": "Link to creator video (TikTok/Instagram)" },
+        { "type": "text",         "id": "creator_handle",   "label": "Creator handle (no @)", "info": "Used in alt text and disclosure" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "UGC Creator Videos",
+      "settings": {
+        "eyebrow": "Real stories",
+        "heading": "The community is building its own evidence.",
+        "subheading": "Real women sharing their Daily Reign journey — unscripted, always their own words."
+      },
+      "blocks": [
+        { "type": "video_tile" },
+        { "type": "video_tile" },
+        { "type": "video_tile" }
+      ]
+    }
+  ]
+}
+{% endschema %}

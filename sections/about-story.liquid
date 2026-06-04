@@ -1,0 +1,163 @@
+{%- comment -%}
+  SECTION: about-story
+  Brand story, mission, and values for the About page.
+  CLAIMS_REVIEW: Brand story copy is editorial, not a health claim.
+  Do not include any supplement benefit claims in this section.
+{%- endcomment -%}
+
+{%- comment -%} ── About Hero ──────────────────────────────────────────────── {%- endcomment -%}
+<section class="about-hero" aria-labelledby="about-hero-heading">
+  <div class="container">
+    <p class="eyebrow">{{ section.settings.eyebrow }}</p>
+    <h1 id="about-hero-heading" class="about-hero__heading">{{ section.settings.hero_heading }}</h1>
+    <p class="about-hero__sub">{{ section.settings.hero_subheading }}</p>
+  </div>
+</section>
+
+{%- comment -%} ── Brand Story ─────────────────────────────────────────────── {%- endcomment -%}
+<section class="about-story section-pad" aria-labelledby="story-heading">
+  <div class="container">
+    <div class="about-story__inner">
+
+      {%- comment -%}
+        STORY IMAGE — use a photo that represents the brand truthfully.
+        If no image, the placeholder text is shown. Source authentic imagery.
+      {%- endcomment -%}
+      <div>
+        {%- if section.settings.story_image != blank -%}
+          <img
+            src="{{ section.settings.story_image | img_url: '700x' }}"
+            alt="{{ section.settings.story_image_alt | default: 'For Her Throne brand image' | escape }}"
+            loading="lazy"
+            style="width:100%;border-radius:12px;border:1px solid var(--color-border);"
+          >
+        {%- else -%}
+          <div class="about-story__image-placeholder" aria-hidden="true">
+            Brand imagery
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="about-story__content">
+        <h2 id="story-heading" class="about-story__heading">{{ section.settings.story_heading }}</h2>
+
+        <div class="about-story__paragraphs">
+          {%- for block in section.blocks -%}
+            {%- case block.type -%}
+            {%- when 'paragraph' -%}
+              <p {{ block.shopify_attributes }}>{{ block.settings.content }}</p>
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+
+        {%- if section.settings.mission != blank -%}
+          <div class="about-story__mission">
+            <p class="about-story__mission-label">Our mission</p>
+            <p class="about-story__mission-text">{{ section.settings.mission }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{%- comment -%} ── Values ──────────────────────────────────────────────────── {%- endcomment -%}
+{%- if section.settings.show_values -%}
+<section class="about-values section-pad" aria-labelledby="values-heading">
+  <div class="container">
+    <header class="about-values__header">
+      <p class="eyebrow">{{ section.settings.values_eyebrow }}</p>
+      <h2 id="values-heading">{{ section.settings.values_heading }}</h2>
+    </header>
+    <div class="about-values__grid">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+        {%- when 'value' -%}
+          <div class="value-card" {{ block.shopify_attributes }}>
+            <h3 class="value-card__title">{{ block.settings.title }}</h3>
+            <p class="value-card__body">{{ block.settings.body }}</p>
+          </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%} ── Product CTA ─────────────────────────────────────────────── {%- endcomment -%}
+<section style="background:var(--color-primary);padding:5rem 0;text-align:center;">
+  <div class="container">
+    <p class="eyebrow">{{ section.settings.cta_eyebrow }}</p>
+    <h2 style="margin-bottom:1.5rem;">{{ section.settings.cta_heading }}</h2>
+    <a href="/products/{{ settings.product_handle }}" class="btn btn-primary btn-lg">
+      {{ section.settings.cta_label }}
+    </a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "About Story",
+  "tag": "div",
+  "class": "section-about",
+  "settings": [
+    { "type": "text",         "id": "eyebrow",          "label": "Hero eyebrow",         "default": "Our story" },
+    { "type": "textarea",     "id": "hero_heading",     "label": "Hero heading",          "default": "Built for you. Finally." },
+    { "type": "textarea",     "id": "hero_subheading",  "label": "Hero subheading",       "default": "The research gap is real. So is this formula." },
+    { "type": "image_picker", "id": "story_image",      "label": "Story image" },
+    { "type": "text",         "id": "story_image_alt",  "label": "Story image alt text",  "default": "For Her Throne brand" },
+    { "type": "textarea",     "id": "story_heading",    "label": "Story section heading", "default": "The healthcare system was not built with Black women in mind." },
+    { "type": "textarea",     "id": "mission",          "label": "Mission statement",     "default": "To close the wellness gap for Black women through evidence-informed supplementation and radical transparency." },
+    { "type": "checkbox",     "id": "show_values",      "label": "Show values section",   "default": true },
+    { "type": "text",         "id": "values_eyebrow",   "label": "Values eyebrow",        "default": "What we stand for" },
+    { "type": "textarea",     "id": "values_heading",   "label": "Values heading",        "default": "Radical transparency. Evidence first. Built for you." },
+    { "type": "text",         "id": "cta_eyebrow",      "label": "CTA eyebrow",           "default": "Ready to start" },
+    { "type": "textarea",     "id": "cta_heading",      "label": "CTA heading",           "default": "Daily Reign is waiting." },
+    { "type": "text",         "id": "cta_label",        "label": "CTA button label",      "default": "Shop Daily Reign — $39.99" }
+  ],
+  "blocks": [
+    {
+      "type": "paragraph",
+      "name": "Story paragraph",
+      "settings": [
+        { "type": "textarea", "id": "content", "label": "Paragraph content" }
+      ]
+    },
+    {
+      "type": "value",
+      "name": "Brand value",
+      "settings": [
+        { "type": "text",     "id": "title", "label": "Value title", "default": "Evidence first" },
+        { "type": "textarea", "id": "body",  "label": "Value body",  "default": "Every ingredient tied to published research. Every stat cited." }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "About Story",
+      "settings": {
+        "eyebrow": "Our story",
+        "hero_heading": "Built for you. Finally.",
+        "hero_subheading": "The research gap is real. So is this formula.",
+        "story_heading": "The healthcare system was not built with Black women in mind.",
+        "mission": "To close the wellness gap for Black women through evidence-informed supplementation and radical transparency.",
+        "show_values": true,
+        "values_eyebrow": "What we stand for",
+        "values_heading": "Radical transparency. Evidence first. Built for you.",
+        "cta_eyebrow": "Ready to start",
+        "cta_heading": "Daily Reign is waiting.",
+        "cta_label": "Shop Daily Reign — $39.99"
+      },
+      "blocks": [
+        { "type": "paragraph", "settings": { "content": "The healthcare system was not built with Black women in mind. The research gaps, the dismissals, the delayed diagnoses — they are not accidents. They are the result of decades of systemic exclusion from clinical trials, medical education, and supplement formulation." } },
+        { "type": "paragraph", "settings": { "content": "For Her Throne exists because that gap is real, documented, and unacceptable. Every ingredient in Daily Reign was chosen specifically for the hormonal health challenges that disproportionately affect Black women — challenges that mainstream wellness brands ignore entirely." } },
+        { "type": "paragraph", "settings": { "content": "This is not a product marketed to you as an afterthought. This was built from the data up, for you, first." } },
+        { "type": "value", "settings": { "title": "Evidence first",          "body": "Every ingredient tied to published research. Every stat cited. No wellness theater." } },
+        { "type": "value", "settings": { "title": "Radical transparency",    "body": "Full doses on the label. Full ingredient stories on the site. No proprietary blends hiding what you're actually taking." } },
+        { "type": "value", "settings": { "title": "Built for you",           "body": "Not adapted. Not reformulated. Built from the data up, specifically for Black women's hormonal health." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
