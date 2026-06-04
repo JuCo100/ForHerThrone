@@ -4,8 +4,6 @@
   instantly via Shopify's Cart API (/cart/change.js).
 {%- endcomment -%}
 
-{%- comment -%} Expose shop money format to JS for correct currency display {%- endcomment -%}
-<script>window.moneyFormat = {{ shop.money_format | json }};</script>
 
 <section class="cart-page section-pad">
   <div class="container" style="max-width:760px;">
@@ -167,13 +165,8 @@
 <script>
 (function() {
 
-  // Use Shopify's money format — no NaN
   function formatMoney(cents) {
-    const amount = (cents / 100).toFixed(2);
-    const fmt = window.moneyFormat || '${{amount}}';
-    return fmt.replace('{{amount}}', amount)
-              .replace('{{amount_no_decimals}}', Math.floor(cents / 100))
-              .replace('{{amount_with_comma_separator}}', amount.replace('.', ','));
+    return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   function updateTotals(totalPrice) {
