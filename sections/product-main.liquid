@@ -119,7 +119,7 @@
                   These are display-only until the app is connected.
                 {%- endcomment -%}
                 {%- assign intervals = "Every month|Every 3 months|Every 6 months|Every 2 years" | split: "|" -%}
-                {%- assign saves     = ""|"Save 10%"|"Save 15%"|"Save 20%" | split: "|" -%}
+                {%- assign saves     = "|Save 10%|Save 15%|Save 20%" | split: "|" -%}
                 {%- for interval in intervals -%}
                   <label class="interval-option">
                     <input type="radio" name="selling_plan_preview" value="{{ forloop.index }}"
