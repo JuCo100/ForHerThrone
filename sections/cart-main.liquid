@@ -4,6 +4,9 @@
   instantly via Shopify's Cart API (/cart/change.js).
 {%- endcomment -%}
 
+{%- comment -%} Expose shop money format to JS for correct currency display {%- endcomment -%}
+<script>window.moneyFormat = {{ shop.money_format | json }};</script>
+
 <section class="cart-page section-pad">
   <div class="container" style="max-width:760px;">
 
@@ -24,28 +27,23 @@
 
       <div id="cart-contents">
 
-        {%- comment -%} Line items {%- endcomment -%}
         <div id="cart-items" style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2.5rem;">
           {%- for item in cart.items -%}
+
             {%- assign is_subscribed = false -%}
-            {%- if item.selling_plan_allocation -%}
-              {%- assign is_subscribed = true -%}
-            {%- endif -%}
+            {%- if item.selling_plan_allocation -%}{%- assign is_subscribed = true -%}{%- endif -%}
 
             <div class="cart-item"
                  data-key="{{ item.key }}"
                  data-variant="{{ item.variant_id }}"
-                 data-price="{{ item.price }}"
-                 data-subscribed="{{ is_subscribed }}"
                  style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.25rem;transition:opacity 0.2s ease;">
 
-              {%- comment -%} Top row: image + title + stepper {%- endcomment -%}
+              {%- comment -%} Main row: image + info + stepper {%- endcomment -%}
               <div style="display:grid;grid-template-columns:80px 1fr auto;gap:1.25rem;align-items:center;">
 
                 {%- if item.image -%}
                   <img src="{{ item.image | img_url: '160x160', crop: 'center' }}"
-                       alt="{{ item.title | escape }}"
-                       width="80" height="80"
+                       alt="{{ item.title | escape }}" width="80" height="80"
                        style="border-radius:8px;object-fit:cover;">
                 {%- else -%}
                   <div style="width:80px;height:80px;background:var(--color-surface-light);border-radius:8px;"></div>
@@ -67,7 +65,7 @@
                 </div>
 
                 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;">
-                  <div style="display:flex;align-items:center;gap:0;background:var(--color-surface-light);border:1px solid var(--color-border);border-radius:6px;overflow:hidden;">
+                  <div style="display:flex;align-items:center;background:var(--color-surface-light);border:1px solid var(--color-border);border-radius:6px;overflow:hidden;">
                     <button type="button" class="qty-btn qty-minus" data-key="{{ item.key }}"
                             aria-label="Decrease quantity"
                             style="width:32px;height:36px;background:none;border:none;color:var(--color-text);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
@@ -79,53 +77,51 @@
                             style="width:32px;height:36px;background:none;border:none;color:var(--color-text);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">+</button>
                   </div>
                   <button type="button" class="remove-item" data-key="{{ item.key }}"
-                          style="font-size:0.75rem;opacity:0.45;text-decoration:underline;color:var(--color-text);background:none;border:none;cursor:pointer;padding:0;"
-                          aria-label="Remove {{ item.title }}">Remove</button>
+                          style="font-size:0.75rem;opacity:0.45;text-decoration:underline;color:var(--color-text);background:none;border:none;cursor:pointer;padding:0;">
+                    Remove
+                  </button>
                 </div>
 
               </div>
 
-              {%- comment -%} Subscription toggle — shown if product has selling plans {%- endcomment -%}
+              {%- comment -%} Subscription toggle — compact, only shown if selling plans exist {%- endcomment -%}
               {%- if item.product.selling_plan_groups.size > 0 -%}
-                <div class="cart-sub-toggle" style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--color-border);">
+                <div style="margin-top:0.875rem;padding-top:0.875rem;border-top:1px solid var(--color-border);display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
 
-                  <div style="display:flex;gap:0.5rem;margin-bottom:0.875rem;">
-                    <button type="button"
-                            class="sub-tab {% unless is_subscribed %}sub-tab--active{% endunless %}"
-                            data-key="{{ item.key }}"
-                            data-type="onetime"
-                            style="flex:1;padding:0.5rem;border-radius:6px;font-size:0.8125rem;font-weight:600;cursor:pointer;border:1px solid var(--color-border);transition:all 0.2s;">
-                      One-time
-                    </button>
-                    <button type="button"
-                            class="sub-tab {% if is_subscribed %}sub-tab--active{% endif %}"
-                            data-key="{{ item.key }}"
-                            data-type="subscribe"
-                            style="flex:1;padding:0.5rem;border-radius:6px;font-size:0.8125rem;font-weight:600;cursor:pointer;border:1px solid var(--color-border);transition:all 0.2s;">
-                      Subscribe &amp; Save
-                    </button>
-                  </div>
+                  {%- comment -%} Toggle switch {%- endcomment -%}
+                  <label class="cart-sub-switch" style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;font-size:0.8125rem;font-weight:500;">
+                    <input type="checkbox"
+                           class="cart-sub-checkbox"
+                           data-key="{{ item.key }}"
+                           {% if is_subscribed %}checked{% endif %}
+                           style="display:none;">
+                    <span class="cart-sub-track" style="
+                      display:inline-flex;width:36px;height:20px;border-radius:10px;
+                      background:{% if is_subscribed %}var(--color-accent){% else %}var(--color-border){% endif %};
+                      position:relative;transition:background 0.2s;flex-shrink:0;">
+                      <span class="cart-sub-thumb" style="
+                        position:absolute;top:2px;
+                        left:{% if is_subscribed %}18px{% else %}2px{% endif %};
+                        width:16px;height:16px;border-radius:50%;
+                        background:#fff;transition:left 0.2s;"></span>
+                    </span>
+                    Subscribe &amp; Save
+                  </label>
 
-                  {%- comment -%} Interval grid — visible when subscribed {%- endcomment -%}
-                  <div class="cart-interval-picker" {% unless is_subscribed %}hidden{% endunless %}
-                       style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.5rem;">
+                  {%- comment -%} Interval dropdown — shown only when subscribed {%- endcomment -%}
+                  <select class="cart-interval-select"
+                          data-key="{{ item.key }}"
+                          {% unless is_subscribed %}hidden{% endunless %}
+                          style="background:var(--color-surface-light);border:1px solid var(--color-accent);border-radius:6px;color:var(--color-text);font-family:var(--font-body);font-size:0.8125rem;padding:0.3rem 0.6rem;cursor:pointer;outline:none;">
                     {%- for group in item.product.selling_plan_groups -%}
                       {%- for plan in group.selling_plans -%}
-                        <button type="button"
-                                class="cart-interval-btn {% if item.selling_plan_allocation.selling_plan.id == plan.id %}cart-interval-btn--active{% endif %}"
-                                data-key="{{ item.key }}"
-                                data-plan="{{ plan.id }}"
-                                style="padding:0.625rem;border-radius:6px;font-size:0.8125rem;cursor:pointer;border:1px solid var(--color-border);text-align:left;transition:all 0.2s;">
-                          <span style="display:block;font-weight:600;">{{ plan.name }}</span>
-                          {%- for adj in plan.price_adjustments -%}
-                            {%- if adj.value_type == 'percentage' -%}
-                              <span style="font-size:0.6875rem;color:var(--color-accent);">Save {{ adj.value }}%</span>
-                            {%- endif -%}
-                          {%- endfor -%}
-                        </button>
+                        <option value="{{ plan.id }}"
+                                {% if item.selling_plan_allocation.selling_plan.id == plan.id %}selected{% endif %}>
+                          {{ plan.name }}
+                        </option>
                       {%- endfor -%}
                     {%- endfor -%}
-                  </div>
+                  </select>
 
                 </div>
               {%- endif -%}
@@ -135,26 +131,21 @@
         </div>
 
         {%- comment -%} Order summary {%- endcomment -%}
-        <div id="cart-summary" style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.75rem;">
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.75rem;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
             <span style="font-size:1.0625rem;">Subtotal</span>
-            <span id="cart-subtotal"
-                  style="font-family:var(--font-heading);font-size:1.375rem;color:var(--color-accent);font-weight:700;">
+            <span id="cart-subtotal" style="font-family:var(--font-heading);font-size:1.375rem;color:var(--color-accent);font-weight:700;">
               {{ cart.total_price | money }}
             </span>
           </div>
           <p style="font-size:0.8125rem;opacity:0.55;margin-bottom:1.5rem;">
             Free shipping · Taxes calculated at checkout.
           </p>
-          <a href="/checkout"
-             id="checkout-btn"
-             class="btn btn-primary btn-lg"
-             style="width:100%;display:flex;justify-content:center;">
-            Checkout — <span id="checkout-total">{{ cart.total_price | money }}</span>
+          <a href="/checkout" class="btn btn-primary btn-lg" style="width:100%;display:flex;justify-content:center;">
+            Checkout — <span id="checkout-total" style="margin-left:0.3ch;">{{ cart.total_price | money }}</span>
           </a>
         </div>
 
-        {%- comment -%} FDA disclaimer required near checkout {%- endcomment -%}
         <p class="fda-disclaimer" style="margin-top:1.5rem;">
           {{ settings.fda_disclaimer }}
         </p>
@@ -171,62 +162,37 @@
   input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
   .qty-btn:hover { background: var(--color-border) !important; }
   .cart-item.is-loading { opacity: 0.4; pointer-events: none; }
-
-  .sub-tab {
-    background: transparent;
-    color: var(--color-text);
-    opacity: 0.6;
-  }
-  .sub-tab--active {
-    background: var(--color-surface-light);
-    border-color: var(--color-accent) !important;
-    color: var(--color-accent);
-    opacity: 1;
-  }
-  .cart-interval-btn {
-    background: var(--color-surface-light);
-    color: var(--color-text);
-  }
-  .cart-interval-btn--active {
-    border-color: var(--color-accent) !important;
-    background: var(--color-surface);
-  }
-  .cart-interval-btn:hover { border-color: var(--color-accent) !important; }
 </style>
 
 <script>
 (function() {
 
-  // Format cents → "$X.XX"
+  // Use Shopify's money format — no NaN
   function formatMoney(cents) {
-    return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const amount = (cents / 100).toFixed(2);
+    const fmt = window.moneyFormat || '${{amount}}';
+    return fmt.replace('{{amount}}', amount)
+              .replace('{{amount_no_decimals}}', Math.floor(cents / 100))
+              .replace('{{amount_with_comma_separator}}', amount.replace('.', ','));
   }
 
-  // Update subtotal + checkout button displays
   function updateTotals(totalPrice) {
-    const subtotalEl   = document.getElementById('cart-subtotal');
-    const checkoutTotal = document.getElementById('checkout-total');
-    const formatted   = formatMoney(totalPrice);
-    if (subtotalEl)    subtotalEl.textContent = formatted;
-    if (checkoutTotal) checkoutTotal.textContent = formatted;
+    const formatted = formatMoney(totalPrice);
+    const subtotal  = document.getElementById('cart-subtotal');
+    const checkout  = document.getElementById('checkout-total');
+    if (subtotal) subtotal.textContent = formatted;
+    if (checkout) checkout.textContent = formatted;
   }
 
-  // Update a single line item's displayed line price
   function updateLinePrice(key, linePrice) {
-    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
-    if (!item) return;
-    const priceEl = item.querySelector('.item-line-price');
+    const item    = document.querySelector(`.cart-item[data-key="${key}"]`);
+    const priceEl = item?.querySelector('.item-line-price');
     if (priceEl) priceEl.textContent = formatMoney(linePrice);
   }
 
-  // Remove a line item row from the DOM
   function removeItemFromDOM(key) {
-    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
-    if (item) item.remove();
-
-    // If no items left, show empty state
-    const remaining = document.querySelectorAll('.cart-item');
-    if (remaining.length === 0) {
+    document.querySelector(`.cart-item[data-key="${key}"]`)?.remove();
+    if (!document.querySelector('.cart-item')) {
       document.getElementById('cart-contents').innerHTML =
         '<div style="text-align:center;padding:4rem 0;">' +
         '<p style="font-size:1.125rem;opacity:0.7;margin-bottom:2rem;">Your cart is empty.</p>' +
@@ -235,50 +201,45 @@
     }
   }
 
-  // POST to /cart/change.js and update the UI
-  async function updateCartItem(key, quantity) {
+  async function changeCart(key, quantity, sellingPlan) {
     const item = document.querySelector(`.cart-item[data-key="${key}"]`);
     if (item) item.classList.add('is-loading');
+
+    const body = { id: key, quantity };
+    if (sellingPlan !== undefined) body.selling_plan = sellingPlan;
 
     try {
       const res  = await fetch('/cart/change.js', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body:    JSON.stringify({ id: key, quantity }),
+        body:    JSON.stringify(body),
       });
       const cart = await res.json();
 
       if (quantity === 0) {
         removeItemFromDOM(key);
       } else {
-        // Find updated line price from cart response
-        const line = cart.items.find(i => i.key === key);
+        const line = cart.items?.find(i => i.key === key);
         if (line) updateLinePrice(key, line.line_price);
-        if (item) item.classList.remove('is-loading');
+        item?.classList.remove('is-loading');
       }
 
       updateTotals(cart.total_price);
 
-      // Update header cart count
       const countEl = document.querySelector('.cart-count');
-      if (countEl) {
-        if (cart.item_count > 0) {
-          countEl.textContent = cart.item_count;
-          countEl.style.display = 'flex';
-        } else {
-          countEl.style.display = 'none';
-        }
-      }
+      if (countEl) countEl.textContent = cart.item_count;
 
     } catch (err) {
-      console.error('Cart update failed:', err);
-      if (item) item.classList.remove('is-loading');
+      console.error('Cart error:', err);
+      item?.classList.remove('is-loading');
     }
   }
 
-  // ── Event listeners ──────────────────────────────────────────────────────
+  function getQty(key) {
+    return parseInt(document.querySelector(`.qty-input[data-key="${key}"]`)?.value || '1', 10);
+  }
 
-  // + / − steppers
+  // ── Qty steppers ─────────────────────────────────────────────────────────
   document.querySelectorAll('.qty-plus, .qty-minus').forEach(btn => {
     btn.addEventListener('click', () => {
       const key   = btn.dataset.key;
@@ -286,94 +247,53 @@
       if (!input) return;
       const newQty = Math.max(0, parseInt(input.value, 10) + (btn.classList.contains('qty-plus') ? 1 : -1));
       input.value = newQty;
-      updateCartItem(key, newQty);
+      changeCart(key, newQty);
     });
   });
 
-  // Direct input change (debounced 600ms)
-  let debounceTimer;
+  let debounce;
   document.querySelectorAll('.qty-input').forEach(input => {
     input.addEventListener('change', () => {
-      clearTimeout(debounceTimer);
+      clearTimeout(debounce);
       const key = input.dataset.key;
       const qty = Math.max(0, parseInt(input.value, 10) || 0);
       input.value = qty;
-      debounceTimer = setTimeout(() => updateCartItem(key, qty), 600);
+      debounce = setTimeout(() => changeCart(key, qty), 600);
     });
   });
 
-  // Remove buttons
+  // ── Remove ───────────────────────────────────────────────────────────────
   document.querySelectorAll('.remove-item').forEach(btn => {
-    btn.addEventListener('click', () => updateCartItem(btn.dataset.key, 0));
+    btn.addEventListener('click', () => changeCart(btn.dataset.key, 0));
   });
 
-  // ── Subscription toggle in cart ──────────────────────────────────────────
+  // ── Subscribe toggle ─────────────────────────────────────────────────────
+  document.querySelectorAll('.cart-sub-checkbox').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const key      = cb.dataset.key;
+      const track    = cb.closest('label').querySelector('.cart-sub-track');
+      const thumb    = cb.closest('label').querySelector('.cart-sub-thumb');
+      const select   = document.querySelector(`.cart-interval-select[data-key="${key}"]`);
 
-  // Switch a cart line between one-time and subscribe
-  async function updateCartItemPlan(key, sellingPlanId) {
-    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
-    if (item) item.classList.add('is-loading');
-
-    try {
-      const body = { id: key, quantity: parseInt(item.querySelector('.qty-input').value, 10) };
-      if (sellingPlanId) body.selling_plan = sellingPlanId;
-      else body.selling_plan = '';
-
-      const res  = await fetch('/cart/change.js', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body:    JSON.stringify(body),
-      });
-      const cart = await res.json();
-      updateTotals(cart.total_price);
-
-      // Update line price display
-      const line = cart.items.find(i => i.key === key);
-      if (line) updateLinePrice(key, line.line_price);
-
-    } catch (err) {
-      console.error('Plan update failed:', err);
-    } finally {
-      if (item) item.classList.remove('is-loading');
-    }
-  }
-
-  // One-time / Subscribe tabs
-  document.querySelectorAll('.sub-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      const key      = tab.dataset.key;
-      const type     = tab.dataset.type;
-      const item     = document.querySelector(`.cart-item[data-key="${key}"]`);
-      const picker   = item?.querySelector('.cart-interval-picker');
-      const allTabs  = item?.querySelectorAll('.sub-tab');
-
-      allTabs?.forEach(t => t.classList.remove('sub-tab--active'));
-      tab.classList.add('sub-tab--active');
-
-      if (type === 'subscribe') {
-        picker?.removeAttribute('hidden');
-        // Auto-select first interval
-        const firstPlan = item?.querySelector('.cart-interval-btn');
-        if (firstPlan) {
-          firstPlan.classList.add('cart-interval-btn--active');
-          updateCartItemPlan(key, firstPlan.dataset.plan);
-        }
+      if (cb.checked) {
+        track.style.background = 'var(--color-accent)';
+        thumb.style.left = '18px';
+        select?.removeAttribute('hidden');
+        const planId = select?.value || '';
+        changeCart(key, getQty(key), planId);
       } else {
-        picker?.setAttribute('hidden', '');
-        item?.querySelectorAll('.cart-interval-btn').forEach(b => b.classList.remove('cart-interval-btn--active'));
-        updateCartItemPlan(key, null);
+        track.style.background = 'var(--color-border)';
+        thumb.style.left = '2px';
+        select?.setAttribute('hidden', '');
+        changeCart(key, getQty(key), '');
       }
     });
   });
 
-  // Interval buttons
-  document.querySelectorAll('.cart-interval-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const key  = btn.dataset.key;
-      const item = document.querySelector(`.cart-item[data-key="${key}"]`);
-      item?.querySelectorAll('.cart-interval-btn').forEach(b => b.classList.remove('cart-interval-btn--active'));
-      btn.classList.add('cart-interval-btn--active');
-      updateCartItemPlan(key, btn.dataset.plan);
+  // ── Interval select ──────────────────────────────────────────────────────
+  document.querySelectorAll('.cart-interval-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      changeCart(sel.dataset.key, getQty(sel.dataset.key), sel.value);
     });
   });
 
