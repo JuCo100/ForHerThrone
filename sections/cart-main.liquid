@@ -1,6 +1,7 @@
 {%- comment -%}
   SECTION: cart-main
-  Cart page — line items, totals, checkout button.
+  Live-updating cart — quantity changes and removals update totals
+  instantly via Shopify's Cart API (/cart/change.js).
 {%- endcomment -%}
 
 <section class="cart-page section-pad">
@@ -12,21 +13,24 @@
 
     {%- if cart.item_count == 0 -%}
 
-      <div style="text-align:center;padding:4rem 0;">
+      <div id="cart-empty" style="text-align:center;padding:4rem 0;">
         <p style="font-size:1.125rem;opacity:0.7;margin-bottom:2rem;">Your cart is empty.</p>
-        <a href="/products/for-her-throne-daily-reign" class="btn btn-primary btn-lg">
+        <a href="/products/{{ settings.product_handle }}" class="btn btn-primary btn-lg">
           Shop Daily Reign
         </a>
       </div>
 
     {%- else -%}
 
-      <form action="/cart" method="post">
+      <div id="cart-contents">
 
         {%- comment -%} Line items {%- endcomment -%}
-        <div style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2.5rem;">
+        <div id="cart-items" style="display:flex;flex-direction:column;gap:1.25rem;margin-bottom:2.5rem;">
           {%- for item in cart.items -%}
-            <div style="display:grid;grid-template-columns:80px 1fr auto;gap:1.25rem;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.25rem;">
+            <div class="cart-item"
+                 data-key="{{ item.key }}"
+                 data-price="{{ item.price }}"
+                 style="display:grid;grid-template-columns:80px 1fr auto;gap:1.25rem;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.25rem;transition:opacity 0.2s ease;">
 
               {%- if item.image -%}
                 <img src="{{ item.image | img_url: '160x160', crop: 'center' }}"
@@ -42,61 +46,203 @@
                 {%- unless item.variant.title == 'Default Title' -%}
                   <p style="font-size:0.875rem;opacity:0.6;margin-bottom:0.5rem;">{{ item.variant.title }}</p>
                 {%- endunless -%}
-                <p style="color:var(--color-accent);font-weight:600;">{{ item.price | money }}</p>
+                <p class="item-line-price" style="color:var(--color-accent);font-weight:600;">
+                  {{ item.line_price | money }}
+                </p>
               </div>
 
               <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.75rem;">
-                <div style="display:flex;align-items:center;gap:0.5rem;background:var(--color-surface-light);border:1px solid var(--color-border);border-radius:6px;padding:0.25rem 0.5rem;">
-                  <label for="qty-{{ item.key }}" style="font-size:0.75rem;opacity:0.6;">Qty</label>
+                {%- comment -%} Quantity stepper {%- endcomment -%}
+                <div style="display:flex;align-items:center;gap:0;background:var(--color-surface-light);border:1px solid var(--color-border);border-radius:6px;overflow:hidden;">
+                  <button type="button"
+                          class="qty-btn qty-minus"
+                          data-key="{{ item.key }}"
+                          aria-label="Decrease quantity"
+                          style="width:32px;height:36px;background:none;border:none;color:var(--color-text);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+                    −
+                  </button>
                   <input type="number"
-                         id="qty-{{ item.key }}"
-                         name="updates[]"
+                         class="qty-input"
+                         data-key="{{ item.key }}"
                          value="{{ item.quantity }}"
                          min="0"
-                         style="width:48px;background:transparent;border:none;color:var(--color-text);text-align:center;font-family:var(--font-body);font-size:0.9375rem;outline:none;">
+                         style="width:40px;background:transparent;border:none;color:var(--color-text);text-align:center;font-family:var(--font-body);font-size:0.9375rem;outline:none;-moz-appearance:textfield;">
+                  <button type="button"
+                          class="qty-btn qty-plus"
+                          data-key="{{ item.key }}"
+                          aria-label="Increase quantity"
+                          style="width:32px;height:36px;background:none;border:none;color:var(--color-text);font-size:1.125rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.15s;">
+                    +
+                  </button>
                 </div>
-                <a href="/cart/change?line={{ forloop.index }}&quantity=0"
-                   style="font-size:0.75rem;opacity:0.45;text-decoration:underline;color:var(--color-text);"
-                   aria-label="Remove {{ item.title }}">
+
+                <button type="button"
+                        class="remove-item"
+                        data-key="{{ item.key }}"
+                        style="font-size:0.75rem;opacity:0.45;text-decoration:underline;color:var(--color-text);background:none;border:none;cursor:pointer;padding:0;"
+                        aria-label="Remove {{ item.title }}">
                   Remove
-                </a>
+                </button>
               </div>
 
             </div>
           {%- endfor -%}
         </div>
 
-        <button type="submit" name="update" class="btn btn-outline" style="margin-bottom:2rem;">
-          Update cart
-        </button>
-
         {%- comment -%} Order summary {%- endcomment -%}
-        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.75rem;">
+        <div id="cart-summary" style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--card-radius);padding:1.75rem;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
             <span style="font-size:1.0625rem;">Subtotal</span>
-            <span style="font-family:var(--font-heading);font-size:1.375rem;color:var(--color-accent);font-weight:700;">
+            <span id="cart-subtotal"
+                  style="font-family:var(--font-heading);font-size:1.375rem;color:var(--color-accent);font-weight:700;">
               {{ cart.total_price | money }}
             </span>
           </div>
           <p style="font-size:0.8125rem;opacity:0.55;margin-bottom:1.5rem;">
-            Shipping and taxes calculated at checkout.
+            Free shipping · Taxes calculated at checkout.
           </p>
-          <a href="/checkout" class="btn btn-primary btn-lg" style="width:100%;display:flex;justify-content:center;">
-            Checkout — {{ cart.total_price | money }}
+          <a href="/checkout"
+             id="checkout-btn"
+             class="btn btn-primary btn-lg"
+             style="width:100%;display:flex;justify-content:center;">
+            Checkout — <span id="checkout-total">{{ cart.total_price | money }}</span>
           </a>
         </div>
 
-        {%- comment -%} FDA disclaimer required near checkout per compliance guidelines {%- endcomment -%}
+        {%- comment -%} FDA disclaimer required near checkout {%- endcomment -%}
         <p class="fda-disclaimer" style="margin-top:1.5rem;">
           {{ settings.fda_disclaimer }}
         </p>
 
-      </form>
+      </div>
 
     {%- endif -%}
 
   </div>
 </section>
+
+<style>
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .qty-btn:hover { background: var(--color-border) !important; }
+  .cart-item.is-loading { opacity: 0.4; pointer-events: none; }
+</style>
+
+<script>
+(function() {
+
+  // Format cents → "$X.XX"
+  function formatMoney(cents) {
+    return '$' + (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  // Update subtotal + checkout button displays
+  function updateTotals(totalPrice) {
+    const subtotalEl   = document.getElementById('cart-subtotal');
+    const checkoutTotal = document.getElementById('checkout-total');
+    const formatted   = formatMoney(totalPrice);
+    if (subtotalEl)    subtotalEl.textContent = formatted;
+    if (checkoutTotal) checkoutTotal.textContent = formatted;
+  }
+
+  // Update a single line item's displayed line price
+  function updateLinePrice(key, linePrice) {
+    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
+    if (!item) return;
+    const priceEl = item.querySelector('.item-line-price');
+    if (priceEl) priceEl.textContent = formatMoney(linePrice);
+  }
+
+  // Remove a line item row from the DOM
+  function removeItemFromDOM(key) {
+    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
+    if (item) item.remove();
+
+    // If no items left, show empty state
+    const remaining = document.querySelectorAll('.cart-item');
+    if (remaining.length === 0) {
+      document.getElementById('cart-contents').innerHTML =
+        '<div style="text-align:center;padding:4rem 0;">' +
+        '<p style="font-size:1.125rem;opacity:0.7;margin-bottom:2rem;">Your cart is empty.</p>' +
+        '<a href="/products/{{ settings.product_handle }}" class="btn btn-primary btn-lg">Shop Daily Reign</a>' +
+        '</div>';
+    }
+  }
+
+  // POST to /cart/change.js and update the UI
+  async function updateCartItem(key, quantity) {
+    const item = document.querySelector(`.cart-item[data-key="${key}"]`);
+    if (item) item.classList.add('is-loading');
+
+    try {
+      const res  = await fetch('/cart/change.js', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body:    JSON.stringify({ id: key, quantity }),
+      });
+      const cart = await res.json();
+
+      if (quantity === 0) {
+        removeItemFromDOM(key);
+      } else {
+        // Find updated line price from cart response
+        const line = cart.items.find(i => i.key === key);
+        if (line) updateLinePrice(key, line.line_price);
+        if (item) item.classList.remove('is-loading');
+      }
+
+      updateTotals(cart.total_price);
+
+      // Update header cart count
+      const countEl = document.querySelector('.cart-count');
+      if (countEl) {
+        if (cart.item_count > 0) {
+          countEl.textContent = cart.item_count;
+          countEl.style.display = 'flex';
+        } else {
+          countEl.style.display = 'none';
+        }
+      }
+
+    } catch (err) {
+      console.error('Cart update failed:', err);
+      if (item) item.classList.remove('is-loading');
+    }
+  }
+
+  // ── Event listeners ──────────────────────────────────────────────────────
+
+  // + / − steppers
+  document.querySelectorAll('.qty-plus, .qty-minus').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key   = btn.dataset.key;
+      const input = document.querySelector(`.qty-input[data-key="${key}"]`);
+      if (!input) return;
+      const newQty = Math.max(0, parseInt(input.value, 10) + (btn.classList.contains('qty-plus') ? 1 : -1));
+      input.value = newQty;
+      updateCartItem(key, newQty);
+    });
+  });
+
+  // Direct input change (debounced 600ms)
+  let debounceTimer;
+  document.querySelectorAll('.qty-input').forEach(input => {
+    input.addEventListener('change', () => {
+      clearTimeout(debounceTimer);
+      const key = input.dataset.key;
+      const qty = Math.max(0, parseInt(input.value, 10) || 0);
+      input.value = qty;
+      debounceTimer = setTimeout(() => updateCartItem(key, qty), 600);
+    });
+  });
+
+  // Remove buttons
+  document.querySelectorAll('.remove-item').forEach(btn => {
+    btn.addEventListener('click', () => updateCartItem(btn.dataset.key, 0));
+  });
+
+})();
+</script>
 
 {% schema %}
 {
