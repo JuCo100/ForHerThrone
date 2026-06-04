@@ -30,7 +30,7 @@
       "blocks_order": ["stat_1","stat_2","stat_3","stat_4"]
     },
     "product_ingredients": {
-      "type": "product-ingredients",
+      "type": "ingredients-detail",
       "settings": {
         "eyebrow": "Full formula — every ingredient, every reason",
         "heading": "Not a generic formula. A targeted one.",
