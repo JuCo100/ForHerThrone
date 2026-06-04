@@ -25,6 +25,14 @@
       },
       "blocks_order": ["para_1","para_2","para_3","val_1","val_2","val_3"]
     }
+    ,
+    "photo_strip": {
+      "type": "photo-strip",
+      "settings": {
+        "eyebrow": "The community",
+        "heading": "For women who've been overlooked long enough."
+      }
+    }
   },
-  "order": ["about_story"]
+  "order": ["about_story", "photo_strip"]
 }
