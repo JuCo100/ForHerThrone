@@ -795,7 +795,10 @@ p { max-width: 68ch; }
 .product-main__description span,
 .product-main__description p,
 .product-main__description div,
-.product-main__description li {
+.product-main__description li,
+.product-main__description strong,
+.product-main__description b,
+.product-main__description em {
   color: inherit !important;
 }
 
@@ -1138,4 +1141,24 @@ p { max-width: 68ch; }
   .site-header__nav { display: none; }
   .ugc__grid { grid-template-columns: repeat(2, 1fr); }
   .site-footer__inner { grid-template-columns: 1fr; }
+}
+
+/* ── Shopify Collabs "Apply Now" button ───────────────────────────────────── */
+#shopify-section-collabs button,
+#shopify-section-collabs input[type="submit"],
+#shopify-section-collabs .button,
+#shopify-section-collabs [class*="apply"],
+#shopify-section-collabs [class*="submit"] {
+  background: var(--color-accent) !important;
+  background-color: var(--color-accent) !important;
+  color: #000 !important;
+  border-color: var(--color-accent) !important;
+}
+#shopify-section-collabs button:hover,
+#shopify-section-collabs input[type="submit"]:hover,
+#shopify-section-collabs .button:hover {
+  opacity: 0.85;
+  background: var(--color-accent) !important;
+  background-color: var(--color-accent) !important;
+  color: #000 !important;
 }
