@@ -1,0 +1,355 @@
+<section class="collab-copy">
+
+  {%- comment -%} ── HERO ─────────────────────────────────────────────────── {%- endcomment -%}
+  <div class="collab-hero">
+    <p class="collab-hero__kicker">For Her Throne Ambassador Program</p>
+    <h1 class="collab-hero__headline">
+      GET PAID <em>FOREVER</em><br>WITHOUT TOUCHING ANYTHING.
+    </h1>
+    <p class="collab-hero__sub">Yes, you heard that right.</p>
+    <a href="#collab-form" class="collab-hero__cta">Show me how &darr;</a>
+  </div>
+
+  {%- comment -%} ── TWO-COL BODY ─────────────────────────────────────────── {%- endcomment -%}
+  <div class="collab-body">
+
+    {%- comment -%} Row 1: Intro + 15% callout side by side {%- endcomment -%}
+    <div class="collab-row collab-row--intro">
+      <div class="collab-row__text">
+        <p class="collab-body__lead collab-body__lead--boxed">We give you a unique QR code. Place it in your community — salons, churches, campuses, wherever Black women gather.</p>
+        <p class="collab-body__text">For Her Throne is a wellness brand built for Black women because the healthcare system never was. We need ambassadors in every city. On the ground. Where it matters.</p>
+      </div>
+      <div class="collab-highlight">
+        <span class="collab-highlight__number">15%</span>
+        <span class="collab-highlight__label">commission on every subscription.<br>Every month. Auto to your PayPal.</span>
+      </div>
+    </div>
+
+    {%- comment -%} Row 2: No-list + Math side by side {%- endcomment -%}
+    <div class="collab-row collab-row--details">
+
+      <div class="collab-nopes">
+        <p class="collab-nopes__intro">What you don't need:</p>
+        <div class="collab-nopes__grid">
+          <div class="collab-nope">No limit on earnings</div>
+          <div class="collab-nope">No expiration date</div>
+          <div class="collab-nope">No monthly quota</div>
+          <div class="collab-nope">No boss</div>
+          <div class="collab-nope">No hours</div>
+          <div class="collab-nope">No inventory</div>
+        </div>
+        <p class="collab-body__text collab-body__text--big">Place your code once.<br><strong>Get paid as long as they stay subscribed.</strong></p>
+      </div>
+
+      <div class="collab-math">
+        <p class="collab-math__intro">Do the math.</p>
+        <p class="collab-math__price">Throne Collection = <strong>$79.99/mo</strong></p>
+        <div class="collab-math__rows">
+          <div class="collab-math__row">
+            <span class="collab-math__subs">1 subscriber</span>
+            <span class="collab-math__earn">$12.00<small>/mo</small></span>
+          </div>
+          <div class="collab-math__row">
+            <span class="collab-math__subs">10 subscribers</span>
+            <span class="collab-math__earn">$120.00<small>/mo</small></span>
+          </div>
+          <div class="collab-math__row collab-math__row--highlight">
+            <span class="collab-math__subs">50 subscribers</span>
+            <span class="collab-math__earn">$600.00<small>/mo</small></span>
+          </div>
+          <div class="collab-math__row collab-math__row--highlight collab-math__row--big">
+            <span class="collab-math__subs">100 subscribers</span>
+            <span class="collab-math__earn">$1,200<small>/mo</small></span>
+          </div>
+        </div>
+        <p class="collab-math__footer">Every month. Automatically. To your PayPal. One subscriber pays you $12 forever.</p>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+<div id="collab-form"></div>
+
+<style>
+  /* ── Hero ──────────────────────────────────────────────────────────────── */
+  .collab-hero {
+    background: var(--color-accent, #C9A84C);
+    color: #000;
+    text-align: center;
+    padding: clamp(3rem, 7vw, 5rem) 1.5rem;
+  }
+
+  .collab-hero__kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-bottom: 1.25rem;
+    max-width: none;
+  }
+
+  .collab-hero__headline {
+    font-family: var(--font-heading);
+    font-size: clamp(2.5rem, 7vw, 5.5rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: #000;
+    margin-bottom: 1.25rem;
+  }
+
+  .collab-hero__headline em {
+    font-style: italic;
+  }
+
+  .collab-hero__sub {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-style: italic;
+    opacity: 0.5;
+    margin: 0 auto 2rem;
+    max-width: none;
+  }
+
+  .collab-hero__cta {
+    display: inline-block;
+    background: #000;
+    color: var(--color-accent, #C9A84C);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.875rem 2.25rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .collab-hero__cta:hover { opacity: 0.8; color: var(--color-accent, #C9A84C); }
+
+  /* ── Body wrapper ──────────────────────────────────────────────────────── */
+  .collab-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(3rem, 6vw, 5rem) clamp(1.5rem, 4vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  /* ── Row 1: Intro + 15% ────────────────────────────────────────────────── */
+  .collab-row--intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .collab-body__lead {
+    font-size: clamp(1.0625rem, 1.75vw, 1.25rem);
+    line-height: 1.65;
+    margin-bottom: 1.25rem;
+    max-width: none;
+  }
+
+  .collab-body__lead--boxed {
+    border: 2px solid var(--color-accent, #C9A84C);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    font-weight: 600;
+  }
+
+  .collab-body__text {
+    font-size: 1rem;
+    line-height: 1.7;
+    opacity: 0.8;
+    margin-bottom: 0;
+    max-width: none;
+  }
+
+  .collab-body__text--big {
+    font-size: clamp(1rem, 1.75vw, 1.25rem);
+    line-height: 1.5;
+    opacity: 1;
+    margin-top: 1.5rem;
+  }
+
+  .collab-highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: var(--color-accent, #C9A84C);
+    color: #000;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    gap: 0.75rem;
+  }
+
+  .collab-highlight__number {
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 8vw, 6rem);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .collab-highlight__label {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* ── Row 2: No-list + Math ─────────────────────────────────────────────── */
+  .collab-row--details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  .collab-nopes__intro {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    margin-bottom: 1rem;
+    max-width: none;
+  }
+
+  .collab-nopes__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.625rem;
+    margin-bottom: 0;
+  }
+
+  .collab-nope {
+    border: 1px solid var(--color-accent, #C9A84C);
+    border-radius: 8px;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .collab-nope::before {
+    content: "✕  ";
+    color: var(--color-accent, #C9A84C);
+    font-weight: 700;
+  }
+
+  /* ── Math ──────────────────────────────────────────────────────────────── */
+  .collab-math {
+    border: 1px solid var(--color-accent, #C9A84C);
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .collab-math__intro {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent, #C9A84C);
+    margin-bottom: 0.25rem;
+    max-width: none;
+  }
+
+  .collab-math__price {
+    font-size: 0.875rem;
+    opacity: 0.5;
+    margin-bottom: 1.25rem;
+    max-width: none;
+  }
+
+  .collab-math__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .collab-math__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 0.625rem 0.875rem;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .collab-math__row--highlight {
+    background: rgba(201,168,76,0.1);
+  }
+
+  .collab-math__subs {
+    font-size: 0.875rem;
+    opacity: 0.65;
+  }
+
+  .collab-math__earn {
+    font-family: var(--font-heading);
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-weight: 700;
+    color: var(--color-accent, #C9A84C);
+    line-height: 1;
+  }
+
+  .collab-math__row--big .collab-math__earn {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .collab-math__earn small {
+    font-size: 0.6em;
+    opacity: 0.6;
+    font-family: var(--font-body);
+    font-weight: 400;
+  }
+
+  .collab-math__footer {
+    font-size: 0.875rem;
+    opacity: 0.45;
+    font-style: italic;
+    max-width: none;
+  }
+
+  /* ── Mobile: stack everything ──────────────────────────────────────────── */
+  @media (max-width: 700px) {
+    .collab-row--intro,
+    .collab-row--details {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Override Shopify Collabs "Apply Now" button ────────────────────────── */
+  #collab-form ~ * button,
+  #collab-form ~ * input[type="submit"],
+  #collab-form ~ * .button,
+  #collab-form ~ * [class*="apply"],
+  #collab-form ~ * [class*="submit"] {
+    background: var(--color-accent, #C9A84C) !important;
+    background-color: var(--color-accent, #C9A84C) !important;
+    color: #000 !important;
+    border-color: var(--color-accent, #C9A84C) !important;
+  }
+  #collab-form ~ * button:hover,
+  #collab-form ~ * input[type="submit"]:hover,
+  #collab-form ~ * .button:hover {
+    opacity: 0.85;
+    background: var(--color-accent, #C9A84C) !important;
+    background-color: var(--color-accent, #C9A84C) !important;
+    color: #000 !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collab Copy",
+  "tag": "div",
+  "class": "section-collab-copy",
+  "settings": [],
+  "presets": [{ "name": "Collab Copy" }]
+}
+{% endschema %}
