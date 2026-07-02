@@ -1144,19 +1144,14 @@ p { max-width: 68ch; }
 }
 
 /* ── Shopify Collabs "Apply Now" button ───────────────────────────────────── */
-#shopify-section-collabs button,
-#shopify-section-collabs input[type="submit"],
-#shopify-section-collabs .button,
-#shopify-section-collabs [class*="apply"],
-#shopify-section-collabs [class*="submit"] {
+.collabs-page__cta-main {
   background: var(--color-accent) !important;
   background-color: var(--color-accent) !important;
   color: #000 !important;
   border-color: var(--color-accent) !important;
 }
-#shopify-section-collabs button:hover,
-#shopify-section-collabs input[type="submit"]:hover,
-#shopify-section-collabs .button:hover {
+.collabs-page__cta-main:hover,
+.collabs-page__cta-main:focus {
   opacity: 0.85;
   background: var(--color-accent) !important;
   background-color: var(--color-accent) !important;
